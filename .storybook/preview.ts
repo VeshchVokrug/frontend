@@ -1,4 +1,7 @@
 import type { Preview } from '@storybook/nextjs-vite'
+import React from 'react'
+import { QueryProvider } from '../src/app/providers/query-provider'
+import '../src/shared/styles/globals.css'
 
 const preview: Preview = {
   parameters: {
@@ -10,12 +13,16 @@ const preview: Preview = {
     },
 
     a11y: {
-      // 'todo' - show a11y violations in the test UI only
-      // 'error' - fail CI on a11y violations
-      // 'off' - skip a11y checks entirely
       test: 'todo',
     },
   },
+
+  decorators: [
+    (Story) =>
+      React.createElement(QueryProvider, {
+        children: React.createElement(Story, {}),
+      }),
+  ],
 }
 
 export default preview
