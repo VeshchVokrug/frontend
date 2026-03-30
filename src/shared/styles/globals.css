@@ -6,9 +6,9 @@
 }
 
 @theme inline {
-  --color-background: var(--background);
+  --color-background: var(--color-white);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
+  --font-sans: : var(--font-helvetica-neue);
   --font-mono: var(--font-geist-mono);
 }
 
@@ -22,7 +22,8 @@
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-helvetica-neue);
+  font-weight: 400;
 }
 
 button,
@@ -33,4 +34,11 @@ a {
 img,
 a {
   display: block;
+}
+
+@theme {
+  --color-white: #f8fafc;
+  --color-main: #2d9ec7;
+  --color-gray: #f1f1f1;
+  --color-secondary: #7d7d7d;
 }

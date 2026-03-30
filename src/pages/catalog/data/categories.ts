@@ -1,0 +1,96 @@
+import { CategoryCardProps } from '@/shared/ui/CategoryCard/type'
+
+export const CATALOG_CATEGORIES: CategoryCardProps[] = [
+  {
+    title: 'Электроника',
+    image: '/images/categories/electronics.svg',
+    href: '/catalog/electronics',
+    colSpan: 5,
+    rowSpan: 1,
+    imagePosition: 'top-left',
+    titlePosition: 'center-right',
+  },
+
+  {
+    title: 'Детские товары',
+    image: '/images/categories/children-goods.svg',
+    href: '/catalog/children-goods',
+    colSpan: 5,
+    rowSpan: 1,
+    imagePosition: 'bottom-right',
+    titlePosition: 'left',
+    customStyles: {
+      paddingRight: '50px',
+    },
+  },
+  {
+    title: 'Медицинское оборудование для реабилитации',
+    image: '/images/categories/medical-equipment.svg',
+    href: '/catalog/medical-equipment',
+    colSpan: 5,
+    rowSpan: 2,
+    imagePosition: 'bottom-right',
+    titlePosition: 'left',
+  },
+  {
+    title: 'Спорт и активный отдых',
+    image: '/images/categories/sport.svg',
+    href: '/catalog/sport',
+    colSpan: 6,
+    rowSpan: 1,
+    imagePosition: 'bottom-right',
+    titlePosition: 'left',
+  },
+  {
+    title: 'Одежда и аксессуары',
+    image: '/images/categories/clothes.svg',
+    href: '/catalog/clothes',
+    colSpan: 6,
+    rowSpan: 1,
+    imagePosition: 'top-left',
+    titlePosition: 'left',
+    customStyles: {
+      paddingLeft: '127px',
+    },
+  },
+  {
+    title: 'Хобби и творчество',
+    image: '/images/categories/hobbies.svg',
+    href: '/catalog/hobbies',
+    colSpan: 5,
+    rowSpan: 2,
+    imagePosition: 'bottom-right',
+    titlePosition: 'left',
+  },
+  {
+    title: 'Строительные инструменты и техника',
+    image: '/images/categories/tools.svg',
+    href: '/catalog/tools',
+    colSpan: 10,
+    rowSpan: 1,
+    imagePosition: 'top-left',
+    titlePosition: 'center-right',
+    customStyles: {
+      paddingLeft: '121px',
+    },
+  },
+  {
+    title: 'Праздники и мероприятия',
+    image: '/images/categories/events.svg',
+    href: '/catalog/events',
+    colSpan: 6,
+    rowSpan: 1,
+    imagePosition: 'bottom-right',
+    titlePosition: 'left',
+  },
+
+  {
+    title: 'Музыкальное оборудование',
+    image: '/images/categories/musical-equipment.svg',
+    href: '/catalog/musical-equipment',
+    colSpan: 6,
+    rowSpan: 1,
+    imagePosition: 'bottom-right',
+    titlePosition: 'left',
+  },
+]

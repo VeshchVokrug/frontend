@@ -1,16 +1,38 @@
 import type { Metadata } from 'next'
-import { Geist, Geist_Mono } from 'next/font/google'
+import localFont from 'next/font/local'
 import '../shared/styles/globals.css'
 import { Providers } from './providers'
 
-const geistSans = Geist({
-  variable: '--font-geist-sans',
-  subsets: ['latin'],
-})
-
-const geistMono = Geist_Mono({
-  variable: '--font-geist-mono',
-  subsets: ['latin'],
+const HelveticaNeue = localFont({
+  src: [
+    {
+      path: '../../public/fonts/HelveticaNeue/HelveticaNeue-Thin.otf',
+      weight: '200',
+      style: 'normal',
+    },
+    {
+      path: '../../public/fonts/HelveticaNeue/HelveticaNeue-Light.otf',
+      weight: '300',
+      style: 'normal',
+    },
+    {
+      path: '../../public/fonts/HelveticaNeue/HelveticaNeue-Roman.otf',
+      weight: '400',
+      style: 'normal',
+    },
+    {
+      path: '../../public/fonts/HelveticaNeue/HelveticaNeue-Medium.otf',
+      weight: '500',
+      style: 'normal',
+    },
+    {
+      path: '../../public/fonts/HelveticaNeue/HelveticaNeue-Bold.otf',
+      weight: '700',
+      style: 'normal',
+    },
+  ],
+  display: 'swap',
+  variable: '--font-helvetica-neue',
 })
 
 export const metadata: Metadata = {
@@ -26,7 +48,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} flex h-full w-full flex-col antialiased`}
+        className={`flex h-full w-full flex-col antialiased ${HelveticaNeue.variable} items-center`}
       >
         <Providers>{children}</Providers>
       </body>
