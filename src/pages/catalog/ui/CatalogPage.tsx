@@ -14,7 +14,7 @@ export default function CatalogPage() {
           ))}
         </div>
         <AdvertList
-          advertList={Array.from({ length: 18 }, (_, index) => ({
+          advertList={Array.from({ length: 8 }, (_, index) => ({
             id: String(index + 1),
             title: 'Название',
             category: 'electronics',

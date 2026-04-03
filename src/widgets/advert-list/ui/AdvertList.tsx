@@ -1,12 +1,21 @@
+'use client'
+
 import { Advert } from '@/entities/advert/model/schema'
 import AdvertCard from '@/entities/advert/ui/AdvertCard/AdvertCard'
+import Pagination from '@/shared/ui/Pagination'
+import { useState } from 'react'
 
 export default function AdvertList({ advertList }: { advertList: Advert[] }) {
+  const [page, setPage] = useState<number>(1)
+
   return (
-    <div className="flex flex-wrap justify-center gap-5">
-      {advertList.map((advert, index) => (
-        <AdvertCard {...advert} key={index} />
-      ))}
-    </div>
+    <section>
+      <div className="mb-5 flex flex-wrap justify-center gap-15.5">
+        {advertList.map((advert) => (
+          <AdvertCard {...advert} key={advert.id} />
+        ))}
+      </div>
+      <Pagination currentPage={page} totalPages={12} setPage={setPage} />
+    </section>
   )
 }
