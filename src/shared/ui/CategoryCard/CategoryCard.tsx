@@ -28,10 +28,10 @@ const titlPositionClasses: Record<TitlePosition, string> = {
 export default function CategoryCard({
   title,
   image,
-  colSpan,
-  rowSpan,
-  imagePosition,
-  titlePosition,
+  colSpan = 5,
+  rowSpan = 1,
+  imagePosition = 'bottom-right',
+  titlePosition = 'right',
   href,
   customStyles,
 }: CategoryCardProps) {
@@ -59,7 +59,7 @@ export default function CategoryCard({
       </h2>
       <Image
         src={image}
-        alt={title}
+        alt={`Изображение категории "${title}"`}
         className={clsx(
           'absolute h-auto w-auto',
           imagePosition && `${imagePositionClasses[imagePosition]}`

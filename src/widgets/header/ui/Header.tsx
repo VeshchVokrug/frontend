@@ -4,7 +4,7 @@ import Link from 'next/link'
 
 export default function Header() {
   return (
-    <header className="mt-13 mb-15 flex w-425 items-center gap-35">
+    <header className="mx-auto mt-13 mb-15 flex w-425 items-center gap-35">
       <Link href="/">
         <Image
           src="/images/logo.png"

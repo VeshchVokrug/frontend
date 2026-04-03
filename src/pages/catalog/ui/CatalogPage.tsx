@@ -14,13 +14,13 @@ export default function CatalogPage() {
           ))}
         </div>
         <AdvertList
-          advertList={Array.from({ length: 18 }).fill({
-            id: 1,
-            title: 'название',
+          advertList={Array.from({ length: 18 }, (_, index) => ({
+            id: String(index + 1),
+            title: 'Название',
             category: 'electronics',
             image: '/images/logo.png',
-            price: 1500,
-          })}
+            price: Math.floor(Math.random() * 5000),
+          }))}
         />
       </main>
     </>
