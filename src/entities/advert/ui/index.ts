@@ -1,0 +1,6 @@
+export { default as AdvertCard } from './Card'
+export { default as AdvertHeader } from './Header'
+export { default as AdvertPhotoSlider } from './PhotoSlider'
+export { default as AdvertСharacteristics } from './Сharacteristics'
+export { default as AdvertOwnerInfo } from './OwnerInfo'
+export { default as AdvertCalendar } from './Calendar'

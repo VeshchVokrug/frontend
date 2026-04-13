@@ -16,9 +16,10 @@ export default function HeaderLink({ text, href, image }: Props) {
       <Image
         src={image}
         alt={`Иконка "${text}"`}
-        width={31}
-        height={33}
+        width={0}
+        height={0}
         sizes="100vw"
+        className="h-auto w-auto"
       />
       <span className="text-xl">{text}</span>
     </Link>

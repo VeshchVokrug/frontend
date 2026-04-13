@@ -1,7 +1,6 @@
 'use client'
 
-import { Advert } from '@/entities/advert/model/schema'
-import AdvertCard from '@/entities/advert/ui/AdvertCard/AdvertCard'
+import { Advert, AdvertCard } from '@/entities/advert'
 import Pagination from '@/shared/ui/Pagination'
 import { useState } from 'react'
 

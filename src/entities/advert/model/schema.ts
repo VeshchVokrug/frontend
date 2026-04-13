@@ -8,4 +8,12 @@ export const advertSchema = z.object({
   price: z.number().min(0),
 })
 
+export const advertPhotosSchema = z.array(
+  z.object({
+    id: z.number(),
+    img: z.string(),
+  })
+)
+
 export type Advert = z.infer<typeof advertSchema>
+export type AdvertPhotos = z.infer<typeof advertPhotosSchema>

@@ -1,8 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
-import AdvertCard from './AdvertCard'
+import AdvertCard from './Card'
 
 const meta: Meta<typeof AdvertCard> = {
-  title: 'entities/AdvertCard',
+  title: 'entities/advert/Card',
   component: AdvertCard,
   tags: ['autodocs'],
 }

@@ -4,7 +4,7 @@ export const CATALOG_CATEGORIES: CategoryCardProps[] = [
   {
     title: 'Электроника',
     image: '/images/categories/electronics.svg',
-    href: '/catalog/electronics',
+    href: '/electronics',
     colSpan: 5,
     rowSpan: 1,
     imagePosition: 'top-left',
@@ -14,7 +14,7 @@ export const CATALOG_CATEGORIES: CategoryCardProps[] = [
   {
     title: 'Детские товары',
     image: '/images/categories/children-goods.svg',
-    href: '/catalog/children-goods',
+    href: '/children-goods',
     colSpan: 5,
     rowSpan: 1,
     imagePosition: 'bottom-right',
@@ -26,7 +26,7 @@ export const CATALOG_CATEGORIES: CategoryCardProps[] = [
   {
     title: 'Медицинское оборудование для реабилитации',
     image: '/images/categories/medical-equipment.svg',
-    href: '/catalog/medical-equipment',
+    href: '/medical-equipment',
     colSpan: 5,
     rowSpan: 2,
     imagePosition: 'bottom-right',
@@ -35,7 +35,7 @@ export const CATALOG_CATEGORIES: CategoryCardProps[] = [
   {
     title: 'Спорт и активный отдых',
     image: '/images/categories/sport.svg',
-    href: '/catalog/sport',
+    href: '/sport',
     colSpan: 6,
     rowSpan: 1,
     imagePosition: 'bottom-right',
@@ -44,7 +44,7 @@ export const CATALOG_CATEGORIES: CategoryCardProps[] = [
   {
     title: 'Одежда и аксессуары',
     image: '/images/categories/clothes.svg',
-    href: '/catalog/clothes',
+    href: '/clothes',
     colSpan: 6,
     rowSpan: 1,
     imagePosition: 'top-left',
@@ -56,7 +56,7 @@ export const CATALOG_CATEGORIES: CategoryCardProps[] = [
   {
     title: 'Хобби и творчество',
     image: '/images/categories/hobbies.svg',
-    href: '/catalog/hobbies',
+    href: '/hobbies',
     colSpan: 5,
     rowSpan: 2,
     imagePosition: 'bottom-right',
@@ -65,7 +65,7 @@ export const CATALOG_CATEGORIES: CategoryCardProps[] = [
   {
     title: 'Строительные инструменты и техника',
     image: '/images/categories/tools.svg',
-    href: '/catalog/tools',
+    href: '/tools',
     colSpan: 10,
     rowSpan: 1,
     imagePosition: 'top-left',
@@ -77,7 +77,7 @@ export const CATALOG_CATEGORIES: CategoryCardProps[] = [
   {
     title: 'Праздники и мероприятия',
     image: '/images/categories/events.svg',
-    href: '/catalog/events',
+    href: '/events',
     colSpan: 6,
     rowSpan: 1,
     imagePosition: 'bottom-right',
@@ -87,7 +87,7 @@ export const CATALOG_CATEGORIES: CategoryCardProps[] = [
   {
     title: 'Музыкальное оборудование',
     image: '/images/categories/musical-equipment.svg',
-    href: '/catalog/musical-equipment',
+    href: '/musical-equipment',
     colSpan: 6,
     rowSpan: 1,
     imagePosition: 'bottom-right',
