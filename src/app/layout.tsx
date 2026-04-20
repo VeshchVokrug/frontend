@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import localFont from 'next/font/local'
-import '../shared/styles/globals.css'
+import '@/shared/styles/globals.css'
 import { Providers } from './providers'
 
 const HelveticaNeue = localFont({
@@ -48,7 +48,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`flex h-full w-full flex-col antialiased ${HelveticaNeue.variable} items-center`}
+        className={`flex h-screen w-full flex-col antialiased ${HelveticaNeue.variable} items-center`}
       >
         <Providers>{children}</Providers>
       </body>

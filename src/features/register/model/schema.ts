@@ -11,4 +11,10 @@ export const registerSchema = z
     path: ['confirmPassword'],
   })
 
+export const authResponseSchema = z.object({
+  accessToken: z.string(),
+  refreshToken: z.string(),
+})
+
 export type RegisterInputData = z.infer<typeof registerSchema>
+export type AuthResponse = z.infer<typeof authResponseSchema>

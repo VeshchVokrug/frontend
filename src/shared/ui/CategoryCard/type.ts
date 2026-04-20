@@ -4,6 +4,7 @@ export type TitlePosition = 'left' | 'right' | 'center-right'
 
 export interface CategoryCardProps {
   title: string
+  slug: string
   image: string
   colSpan?: number
   rowSpan?: number

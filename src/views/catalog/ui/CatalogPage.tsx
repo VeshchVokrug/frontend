@@ -1,5 +1,5 @@
 import CategoryCard from '@/shared/ui/CategoryCard'
-import { CATALOG_CATEGORIES } from '../../../shared/constants/categories'
+import { CATALOG_CATEGORIES } from '@/shared/constants/categories'
 import Header from '@/widgets/header'
 import AdvertList from '@/widgets/advert-list'
 

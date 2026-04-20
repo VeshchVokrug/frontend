@@ -5,10 +5,10 @@ type Props = {
   placeholder: string
   name: string
   autoComplete?: string
-  label: string
+  label?: string
   value: string
   onChange?: React.ChangeEventHandler<HTMLInputElement>
-  required: boolean
+  required?: boolean
   error?: string
 }
 
@@ -24,8 +24,16 @@ export default function Input({
   error,
 }: Props) {
   return (
-    <label>
-      <p className="mb-1 block text-sm font-medium text-gray-600">{label}</p>
+    <label
+      className={`${(type === 'checkbox' || type === 'radio') && 'flex items-center gap-3'}`}
+    >
+      {label && (
+        <p
+          className={`ml-1.5 block text-sm font-medium text-gray-600 ${(type === 'checkbox' || type === 'radio') ?? 'mb-1'}`}
+        >
+          {label}
+        </p>
+      )}
       <input
         type={type}
         name={name}
@@ -34,7 +42,7 @@ export default function Input({
         value={value}
         onChange={onChange}
         required={required}
-        className="w-full rounded-md border border-gray-300 bg-indigo-100 p-1"
+        className={`rounded-2xl border border-gray-300 bg-indigo-50 px-2.5 py-1.5 ${type === 'checkbox' || type === 'radio' ? 'accent-main -order-1' : 'w-full'}`}
       />
       {error && (
         <p className="mt-1 text-sm text-red-600">

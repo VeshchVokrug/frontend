@@ -3,6 +3,7 @@ import { CategoryCardProps } from '@/shared/ui/CategoryCard/type'
 export const CATALOG_CATEGORIES: CategoryCardProps[] = [
   {
     title: 'Электроника',
+    slug: 'electronics',
     image: '/images/categories/electronics.svg',
     href: '/electronics',
     colSpan: 5,
@@ -13,6 +14,7 @@ export const CATALOG_CATEGORIES: CategoryCardProps[] = [
 
   {
     title: 'Детские товары',
+    slug: 'childrenGoods',
     image: '/images/categories/children-goods.svg',
     href: '/children-goods',
     colSpan: 5,
@@ -25,6 +27,7 @@ export const CATALOG_CATEGORIES: CategoryCardProps[] = [
   },
   {
     title: 'Медицинское оборудование для реабилитации',
+    slug: 'medicalEquipment',
     image: '/images/categories/medical-equipment.svg',
     href: '/medical-equipment',
     colSpan: 5,
@@ -34,6 +37,7 @@ export const CATALOG_CATEGORIES: CategoryCardProps[] = [
   },
   {
     title: 'Спорт и активный отдых',
+    slug: 'sport',
     image: '/images/categories/sport.svg',
     href: '/sport',
     colSpan: 6,
@@ -43,6 +47,7 @@ export const CATALOG_CATEGORIES: CategoryCardProps[] = [
   },
   {
     title: 'Одежда и аксессуары',
+    slug: 'clothes',
     image: '/images/categories/clothes.svg',
     href: '/clothes',
     colSpan: 6,
@@ -55,6 +60,7 @@ export const CATALOG_CATEGORIES: CategoryCardProps[] = [
   },
   {
     title: 'Хобби и творчество',
+    slug: 'hobbies',
     image: '/images/categories/hobbies.svg',
     href: '/hobbies',
     colSpan: 5,
@@ -64,6 +70,7 @@ export const CATALOG_CATEGORIES: CategoryCardProps[] = [
   },
   {
     title: 'Строительные инструменты и техника',
+    slug: 'tools',
     image: '/images/categories/tools.svg',
     href: '/tools',
     colSpan: 10,
@@ -76,6 +83,7 @@ export const CATALOG_CATEGORIES: CategoryCardProps[] = [
   },
   {
     title: 'Праздники и мероприятия',
+    slug: 'events',
     image: '/images/categories/events.svg',
     href: '/events',
     colSpan: 6,
@@ -86,6 +94,7 @@ export const CATALOG_CATEGORIES: CategoryCardProps[] = [
 
   {
     title: 'Музыкальное оборудование',
+    slug: 'musicalEquipment',
     image: '/images/categories/musical-equipment.svg',
     href: '/musical-equipment',
     colSpan: 6,

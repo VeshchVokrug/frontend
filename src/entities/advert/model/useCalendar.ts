@@ -43,10 +43,13 @@ const createCalendar = (
     const date = new Date(currentYear, currentMonth, i)
     const isActive = !unavailableDates.includes(i)
     const isSelected =
-      firstSelectedDate !== '' &&
-      lastSelectedDate !== '' &&
-      date >= firstSelectedDate &&
-      date <= lastSelectedDate
+      (firstSelectedDate !== '' &&
+        lastSelectedDate !== '' &&
+        date >= firstSelectedDate &&
+        date <= lastSelectedDate) ||
+      (firstSelectedDate instanceof Date &&
+        lastSelectedDate === '' &&
+        firstSelectedDate.getTime() === date.getTime())
 
     calendar[(firstMonthDay + i - 1) % 7].push({ date, isActive, isSelected })
   }

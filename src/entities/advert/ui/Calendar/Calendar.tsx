@@ -72,13 +72,7 @@ export default function Calendar() {
                 ({ date, isActive, isSelected }, indexDate) => (
                   <li key={`${index}-${indexDate}`} className="text-center">
                     <button
-                      className={`disabled:text-disabled relative isolate text-[30px] ${date === '' && 'opacity-0'} ${isSelected && 'text-main'} ${
-                        firstSelectedDate instanceof Date &&
-                        date instanceof Date &&
-                        firstSelectedDate.getTime() === date.getTime() &&
-                        !lastSelectedDate &&
-                        'after:bg-main w-full text-center text-white after:absolute after:top-1/2 after:left-1/2 after:-z-10 after:h-full after:w-[140%] after:-translate-x-1/2 after:-translate-y-1/2 after:rounded-full'
-                      }`}
+                      className={`disabled:text-disabled relative isolate text-[30px] ${date === '' && 'opacity-0'} ${isSelected && 'text-main'}`}
                       disabled={!isActive && !isSelected}
                       onClick={() => selectDate(index, indexDate)}
                     >
