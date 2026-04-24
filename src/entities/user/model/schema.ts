@@ -4,7 +4,7 @@ export const userSchema = z.object({
   id: z.string(),
   name: z.string(),
   bio: z.string().optional(),
-  avatarUrl: z.string().nullable(),
+  avatarUrl: z.string().nullable().optional(),
   favoriteCategories: z.array(z.string()).optional(),
 })
 

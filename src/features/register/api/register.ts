@@ -10,6 +10,6 @@ export const register = async ({
     email,
     password,
   })
-  tokenStorage.setTokens(data.accessToken, data.refreshToken)
+  tokenStorage.setAccessToken(data.accessToken)
   return data
 }

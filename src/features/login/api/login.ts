@@ -10,6 +10,6 @@ export const login = async ({
     email,
     password,
   })
-  tokenStorage.setTokens(data.accessToken, data.refreshToken)
+  tokenStorage.setAccessToken(data.accessToken)
   return data
 }

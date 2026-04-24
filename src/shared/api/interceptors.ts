@@ -1,4 +1,4 @@
-import axios, { AxiosError, InternalAxiosRequestConfig } from 'axios'
+import { AxiosError, InternalAxiosRequestConfig } from 'axios'
 import { apiClient } from './api-client'
 import { tokenStorage } from '../lib/tokens'
 import { AuthResponse } from '@/features/login/model/schema'
@@ -9,10 +9,16 @@ interface RetryableRequest extends InternalAxiosRequestConfig {
 }
 
 let isRefreshing = false
-let refreshQueue: Array<(token: string) => void> = []
+let refreshQueue: Array<{
+  resolve: (token: string) => void
+  reject: (error: unknown) => void
+}> = []
 
-const processQueue = (token: string) => {
-  refreshQueue.forEach((resolve) => resolve(token))
+const processQueue = (error: unknown, token: string | null) => {
+  refreshQueue.forEach(({ resolve, reject }) => {
+    if (error) reject(error)
+    else if (token) resolve(token)
+  })
   refreshQueue = []
 }
 
@@ -31,23 +37,16 @@ export const setupInterceptors = () => {
       if (
         error.response?.status !== 401 ||
         !originalRequest ||
-        originalRequest._retry
+        originalRequest._retry ||
+        originalRequest.url?.includes('/identity/auth/refresh')
       ) {
         return Promise.reject(error)
       }
 
-      const refreshToken = tokenStorage.getRefreshToken()
-      const accessToken = tokenStorage.getAccessToken()
-      if (!refreshToken) {
-        tokenStorage.clearTokens()
-        queryClient.removeQueries({ queryKey: ['current-user'] })
-        return Promise.reject(error)
-      }
-
       if (isRefreshing) {
-        return new Promise<string>((resolve) =>
-          refreshQueue.push(resolve)
-        ).then((token) => {
+        return new Promise<string>((resolve, reject) => {
+          refreshQueue.push({ resolve, reject })
+        }).then((token) => {
           originalRequest.headers.Authorization = `Bearer ${token}`
           return apiClient(originalRequest)
         })
@@ -57,18 +56,20 @@ export const setupInterceptors = () => {
       isRefreshing = true
 
       try {
-        const { data } = await axios.post<AuthResponse>(
-          `${process.env.NEXT_PUBLIC_API_URL}/identity/auth/refresh`,
-          { accessToken, refreshToken },
-          { headers: { Authorization: `Bearer ${accessToken}` } }
+        const { data } = await apiClient.post<AuthResponse>(
+          '/identity/auth/refresh',
+          {
+            accessToken: tokenStorage.getAccessToken(),
+          }
         )
-        tokenStorage.setTokens(data.accessToken, data.refreshToken)
-        processQueue(data.accessToken)
+        tokenStorage.setAccessToken(data.accessToken)
+        processQueue(null, data.accessToken)
         originalRequest.headers.Authorization = `Bearer ${data.accessToken}`
         return apiClient(originalRequest)
       } catch (refreshError) {
+        processQueue(refreshError, null)
         tokenStorage.clearTokens()
-        queryClient.removeQueries({ queryKey: ['current-user'] })
+        window.dispatchEvent(new Event('auth:logout'))
         return Promise.reject(refreshError)
       } finally {
         isRefreshing = false

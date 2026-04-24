@@ -13,7 +13,7 @@ export const registerSchema = z
 
 export const authResponseSchema = z.object({
   accessToken: z.string(),
-  refreshToken: z.string(),
+  refreshToken: z.string().optional(),
 })
 
 export type RegisterInputData = z.infer<typeof registerSchema>
