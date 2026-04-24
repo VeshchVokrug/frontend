@@ -3,7 +3,7 @@
 import Input from '@/shared/ui/Input'
 import { useState } from 'react'
 import { createProfileInputData, createProfileSchema } from '../../model/schema'
-import { CATALOG_CATEGORIES } from '@/shared/constants/categories'
+import { CATEGORIES } from '@/shared/constants/categories'
 import { ZodFormattedError } from 'zod'
 import { useCreateProifle } from '../../model/use-create-profile'
 import { useRouter } from 'next/navigation'
@@ -69,7 +69,7 @@ export default function CreateProfileForm() {
               setProfileData((prev) => ({ ...prev, bio: evt.target.value }))
             }
             required={false}
-            className="w-full resize-none rounded-2xl border border-gray-300 bg-indigo-50 px-2.5 py-1.5"
+            className="w-full resize-none rounded-2xl bg-white px-2.5 py-1.5"
           />
           {errors?.bio?._errors.length && (
             <p className="mt-1 text-sm text-red-600">
@@ -82,7 +82,7 @@ export default function CreateProfileForm() {
             Выберите любимые категории
           </p>
           <div>
-            {CATALOG_CATEGORIES.map(({ title, slug }, index) => (
+            {CATEGORIES.map(({ title, slug }, index) => (
               <Input
                 key={index}
                 type="checkbox"

@@ -4,7 +4,7 @@ import Image from 'next/image'
 
 export default function ProfilePage({ user }: { user: User }) {
   return (
-    <main className="mx-auto min-w-2xl p-6">
+    <main className="mx-auto max-w-425 min-w-2xl p-6">
       <h1 className="mb-4 text-2xl font-bold text-gray-800">Профиль</h1>
 
       <div className="flex flex-col gap-4">

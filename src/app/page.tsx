@@ -1,5 +1,5 @@
-import { redirect } from 'next/navigation'
+import MainPage from '@/views/main'
 
-export default function MainPage() {
-  redirect('/catalog')
+export default function page() {
+  return <MainPage />
 }
