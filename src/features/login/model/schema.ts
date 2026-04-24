@@ -7,7 +7,7 @@ export const loginSchema = z.object({
 
 export const authResponseSchema = z.object({
   accessToken: z.string(),
-  refreshToken: z.string(),
+  refreshToken: z.string().optional(),
 })
 
 export type LoginInputData = z.infer<typeof loginSchema>
