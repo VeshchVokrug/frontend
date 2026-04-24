@@ -46,17 +46,16 @@ export default function RegisterForm() {
     <form
       onSubmit={handleSubmit}
       autoComplete="off"
-      className="flex h-fit w-sm flex-col gap-4 rounded-2xl border border-gray-200 p-5 shadow-lg"
+      className="bg-gray flex h-fit w-fit min-w-187.5 flex-col gap-13 rounded-[30px] p-18 pb-12"
     >
-      <h1 className="text-center text-2xl font-bold text-gray-800">
+      <h1 className="text-center text-[50px] font-bold text-gray-800">
         Зарегистрироваться
       </h1>
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-col gap-10">
         <Input
           type="text"
           name="email"
           placeholder="Email"
-          label="Введите email"
           value={registerInputData.email}
           onChange={(evt) =>
             setRegisterInputData((prev) => ({
@@ -71,8 +70,7 @@ export default function RegisterForm() {
         <Input
           type="password"
           name="password"
-          placeholder="Password"
-          label="Введите пароль"
+          placeholder="Пароль"
           value={registerInputData.password}
           onChange={(evt) =>
             setRegisterInputData((prev) => ({
@@ -87,8 +85,7 @@ export default function RegisterForm() {
         <Input
           type="password"
           name="confirmPassword"
-          placeholder="Password"
-          label="Потвердите пароль"
+          placeholder="Подтвердите пароль"
           value={registerInputData.confirmPassword}
           onChange={(evt) =>
             setRegisterInputData((prev) => ({
@@ -101,19 +98,23 @@ export default function RegisterForm() {
         />
       </div>
 
-      <div>
-        <button
-          type="submit"
-          className="bg-main w-full rounded-2xl p-1 font-medium text-white transition-all hover:opacity-80"
-        >
-          Зарегистрироваться
-        </button>
-        {serverError && <p className="text-sm text-red-500">{serverError}</p>}
-      </div>
+      <div className="flex flex-col items-center gap-7.5">
+        <div>
+          <button
+            type="submit"
+            className="bg-main w-fit rounded-[20px] p-1 px-15 py-4 text-[40px] font-medium text-white transition-all hover:opacity-80"
+          >
+            Зарегистрироваться
+          </button>
+          {serverError && (
+            <p className="text-[40px] text-red-500">{serverError}</p>
+          )}
+        </div>
 
-      <div className="text-center">
-        <p className="text-secondary text-sm">Уже есть аккаунт?</p>
-        <Link href="/login" className="text-main underline">
+        <Link
+          href="/login"
+          className="text-main text-center text-[36px] underline"
+        >
           Войти
         </Link>
       </div>

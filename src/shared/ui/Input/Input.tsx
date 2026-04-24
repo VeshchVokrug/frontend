@@ -42,11 +42,11 @@ export default function Input({
         value={value}
         onChange={onChange}
         required={required}
-        className={`rounded-[20px] bg-white px-2.5 py-1.5 ${type === 'checkbox' || type === 'radio' ? 'accent-main -order-1' : 'w-full'} `}
+        className={`rounded-[20px] bg-white px-6 py-4 text-[40px] ${type === 'checkbox' || type === 'radio' ? 'accent-main -order-1' : 'w-full'} `}
       />
 
       {error && (
-        <p className="mt-1 text-sm text-red-600">
+        <p className="mt-3 text-[40px] text-red-600">
           {Array.isArray(error) ? error.join(', ') : error}
         </p>
       )}

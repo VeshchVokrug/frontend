@@ -2,7 +2,6 @@ import { AxiosError, InternalAxiosRequestConfig } from 'axios'
 import { apiClient } from './api-client'
 import { tokenStorage } from '../lib/tokens'
 import { AuthResponse } from '@/features/login/model/schema'
-import { queryClient } from '@/app/providers/query-provider'
 
 interface RetryableRequest extends InternalAxiosRequestConfig {
   _retry?: boolean

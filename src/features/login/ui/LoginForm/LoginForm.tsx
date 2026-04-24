@@ -41,15 +41,14 @@ export default function LoginForm() {
     <form
       onSubmit={handleSubmit}
       autoComplete="off"
-      className="flex h-fit w-sm flex-col gap-4 rounded-2xl border border-gray-200 p-5 shadow-lg"
+      className="bg-gray flex h-fit w-fit min-w-187.5 flex-col gap-13 rounded-[30px] p-18"
     >
-      <h1 className="text-center text-2xl font-bold text-gray-800">Войти</h1>
-      <div className="flex flex-col gap-2">
+      <h1 className="text-center text-[50px] font-bold text-gray-800">Войти</h1>
+      <div className="flex flex-col gap-9">
         <Input
           type="text"
           name="email"
           placeholder="Email"
-          label="Введите email"
           value={loginInputData.email}
           onChange={(evt) =>
             setLoginInputData((prev) => ({ ...prev, email: evt.target.value }))
@@ -61,8 +60,7 @@ export default function LoginForm() {
         <Input
           type="password"
           name="password"
-          placeholder="Password"
-          label="Введите пароль"
+          placeholder="Пароль"
           value={loginInputData.password}
           onChange={(evt) =>
             setLoginInputData((prev) => ({
@@ -75,18 +73,21 @@ export default function LoginForm() {
         />
       </div>
 
-      <div>
-        <button
-          type="submit"
-          className="bg-main w-full rounded-2xl p-1 font-medium text-white transition-all hover:opacity-80"
+      <div className="flex flex-col items-center gap-7.5">
+        <div>
+          <button
+            type="submit"
+            className="bg-main w-fit rounded-[20px] p-1 px-22.5 py-4 text-[40px] font-medium text-white transition-all hover:opacity-80"
+          >
+            Войти
+          </button>
+          {serverError && <p className="text-sm text-red-500">{serverError}</p>}
+        </div>
+
+        <Link
+          href="/register"
+          className="text-main text-center text-[36px] underline"
         >
-          Войти
-        </button>
-        {serverError && <p className="text-sm text-red-500">{serverError}</p>}
-      </div>
-      <div className="text-center">
-        <p className="text-secondary text-sm">Еще нет аккаунта?</p>
-        <Link href="/register" className="text-main underline">
           Зарегистрироваться
         </Link>
       </div>
