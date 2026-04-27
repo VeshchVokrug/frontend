@@ -48,7 +48,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`flex h-screen w-full flex-col antialiased ${HelveticaNeue.variable} items-center`}
+        className={`mx-auto flex h-screen w-full max-w-425 flex-col antialiased ${HelveticaNeue.variable} items-center`}
       >
         <Providers>{children}</Providers>
       </body>

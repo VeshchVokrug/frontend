@@ -9,6 +9,11 @@ const calendarState = vi.hoisted(() => ({
   callIndex: 0,
 }))
 
+const UNAVAILABLE_DATES: Record<number, number[]> = {
+  3: [1, 5, 7, 8, 9, 15, 16, 17, 19, 20],
+  4: [1, 2, 3, 6, 7, 8],
+}
+
 vi.mock('react', async () => {
   const actual = await vi.importActual<typeof import('react')>('react')
 
@@ -72,7 +77,7 @@ describe('useCalendar', () => {
   })
 
   it('возвращает начальное состояние', () => {
-    const result = useCalendar()
+    const result = useCalendar(UNAVAILABLE_DATES)
 
     expect(result.currentMonth).toBe(3)
     expect(result.firstSelectedDate).toBe('')
@@ -82,151 +87,151 @@ describe('useCalendar', () => {
   })
 
   it('setPrevMonth переходит на предыдущий месяц', () => {
-    let result = useCalendar()
+    let result = useCalendar(UNAVAILABLE_DATES)
     result.setPrevMonth()
-    result = useCalendar()
+    result = useCalendar(UNAVAILABLE_DATES)
 
     expect(result.currentMonth).toBe(2)
   })
 
   it('setNextMonth переходит на следующий месяц', () => {
-    let result = useCalendar()
+    let result = useCalendar(UNAVAILABLE_DATES)
     result.setNextMonth()
-    result = useCalendar()
+    result = useCalendar(UNAVAILABLE_DATES)
 
     expect(result.currentMonth).toBe(4)
   })
 
   it('setPrevMonth корректно переходит с января на декабрь', () => {
     calendarState.currentFullDate = new Date(2026, 0, 1)
-    let result = useCalendar()
+    let result = useCalendar(UNAVAILABLE_DATES)
     result.setPrevMonth()
-    result = useCalendar()
+    result = useCalendar(UNAVAILABLE_DATES)
 
     expect(result.currentMonth).toBe(11)
   })
 
   it('setNextMonth корректно переходит с декабря на январь', () => {
     calendarState.currentFullDate = new Date(2026, 11, 1)
-    let result = useCalendar()
+    let result = useCalendar(UNAVAILABLE_DATES)
     result.setNextMonth()
-    result = useCalendar()
+    result = useCalendar(UNAVAILABLE_DATES)
 
     expect(result.currentMonth).toBe(0)
   })
 
   it('selectDate устанавливает firstSelectedDate при первом клике', () => {
-    let result = useCalendar()
+    let result = useCalendar(UNAVAILABLE_DATES)
     result.selectDate(4, 1)
-    result = useCalendar()
+    result = useCalendar(UNAVAILABLE_DATES)
 
     expect(result.firstSelectedDate).toEqual(new Date(2026, 3, 10))
     expect(result.lastSelectedDate).toBe('')
   })
 
   it('selectDate устанавливает lastSelectedDate при втором клике', () => {
-    let result = useCalendar()
+    let result = useCalendar(UNAVAILABLE_DATES)
     result.selectDate(4, 1)
-    result = useCalendar()
+    result = useCalendar(UNAVAILABLE_DATES)
     result.selectDate(6, 1)
-    result = useCalendar()
+    result = useCalendar(UNAVAILABLE_DATES)
 
     expect(result.firstSelectedDate).toEqual(new Date(2026, 3, 10))
     expect(result.lastSelectedDate).toEqual(new Date(2026, 3, 12))
   })
 
   it('selectDate сбрасывает выбор при третьем клике', () => {
-    let result = useCalendar()
+    let result = useCalendar(UNAVAILABLE_DATES)
     result.selectDate(4, 1)
-    result = useCalendar()
+    result = useCalendar(UNAVAILABLE_DATES)
     result.selectDate(6, 1)
-    result = useCalendar()
+    result = useCalendar(UNAVAILABLE_DATES)
     result.selectDate(5, 1)
-    result = useCalendar()
+    result = useCalendar(UNAVAILABLE_DATES)
 
     expect(result.firstSelectedDate).toBe('')
     expect(result.lastSelectedDate).toBe('')
   })
 
   it('selectDate не меняет состояние при клике на недоступную дату', () => {
-    let result = useCalendar()
+    let result = useCalendar(UNAVAILABLE_DATES)
     result.selectDate(3, 1)
-    result = useCalendar()
+    result = useCalendar(UNAVAILABLE_DATES)
 
     expect(result.firstSelectedDate).toBe('')
     expect(result.lastSelectedDate).toBe('')
   })
 
   it('selectDate меняет порядок если первая дата позже второй', () => {
-    let result = useCalendar()
+    let result = useCalendar(UNAVAILABLE_DATES)
     result.selectDate(6, 1)
-    result = useCalendar()
+    result = useCalendar(UNAVAILABLE_DATES)
     result.selectDate(4, 1)
-    result = useCalendar()
+    result = useCalendar(UNAVAILABLE_DATES)
 
     expect(result.firstSelectedDate).toEqual(new Date(2026, 3, 10))
     expect(result.lastSelectedDate).toBe('')
   })
 
   it('selectDate устанавливает ошибку при диапазоне с недоступными датами', () => {
-    let result = useCalendar()
+    let result = useCalendar(UNAVAILABLE_DATES)
     result.selectDate(5, 0)
-    result = useCalendar()
+    result = useCalendar(UNAVAILABLE_DATES)
     result.selectDate(0, 1)
-    result = useCalendar()
+    result = useCalendar(UNAVAILABLE_DATES)
 
     expect(result.error).toBe('Выбраны недоступные даты')
   })
 
   it('selectDate не устанавливает ошибку при корректном диапазоне', () => {
-    let result = useCalendar()
+    let result = useCalendar(UNAVAILABLE_DATES)
     result.selectDate(4, 1)
-    result = useCalendar()
+    result = useCalendar(UNAVAILABLE_DATES)
     result.selectDate(6, 1)
-    result = useCalendar()
+    result = useCalendar(UNAVAILABLE_DATES)
 
     expect(result.error).toBe('')
   })
 
   it('selectDate сбрасывает ошибку при новом выборе', () => {
-    let result = useCalendar()
+    let result = useCalendar(UNAVAILABLE_DATES)
     result.selectDate(5, 0)
-    result = useCalendar()
+    result = useCalendar(UNAVAILABLE_DATES)
     result.selectDate(0, 1)
-    result = useCalendar()
+    result = useCalendar(UNAVAILABLE_DATES)
 
     expect(result.error).toBe('Выбраны недоступные даты')
 
     result.selectDate(5, 1)
-    result = useCalendar()
+    result = useCalendar(UNAVAILABLE_DATES)
 
     expect(result.error).toBe('')
   })
 
   it('даты в выбранном диапазоне помечены isSelected', () => {
-    let result = useCalendar()
+    let result = useCalendar(UNAVAILABLE_DATES)
     result.selectDate(4, 1)
-    result = useCalendar()
+    result = useCalendar(UNAVAILABLE_DATES)
     result.selectDate(6, 1)
-    result = useCalendar()
+    result = useCalendar(UNAVAILABLE_DATES)
 
     const april11 = result.calendar[5][1]
     expect(april11.isSelected).toBe(true)
   })
 
   it('даты вне диапазона не помечены isSelected', () => {
-    let result = useCalendar()
+    let result = useCalendar(UNAVAILABLE_DATES)
     result.selectDate(4, 1)
-    result = useCalendar()
+    result = useCalendar(UNAVAILABLE_DATES)
     result.selectDate(6, 1)
-    result = useCalendar()
+    result = useCalendar(UNAVAILABLE_DATES)
 
     const april13 = result.calendar[0][2]
     expect(april13.isSelected).toBe(false)
   })
 
   it('без выбранных дат isSelected не устанавливается', () => {
-    const result = useCalendar()
+    const result = useCalendar(UNAVAILABLE_DATES)
 
     const allSelected = result.calendar.flat().some((day) => day.isSelected)
 

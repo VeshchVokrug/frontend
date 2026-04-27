@@ -8,11 +8,6 @@ interface Day {
 
 type Calendar = Day[][]
 
-const UNAVAILABLE_DATES: Record<number, number[]> = {
-  3: [1, 5, 7, 8, 9, 15, 16, 17, 19, 20],
-  4: [1, 2, 3, 6, 7, 8],
-}
-
 const createCalendar = (
   unavailableDates: number[],
   currentFullDate: Date,
@@ -57,7 +52,9 @@ const createCalendar = (
   return calendar
 }
 
-export const useCalendar = () => {
+export const useCalendar = (
+  initUnavailableDates: Record<number, number[]> = {}
+) => {
   const [currentFullDate, setCurrentFullDate] = useState<Date>(new Date())
   const [firstSelectedDate, setFirstSelectedDate] = useState<Date | ''>('')
   const [lastSelectedDate, setLastSelectedDate] = useState<Date | ''>('')
@@ -66,14 +63,20 @@ export const useCalendar = () => {
   const currentMonth = currentFullDate.getMonth()
 
   const calendar = useMemo(() => {
-    const unavailableDates = UNAVAILABLE_DATES[currentMonth] ?? []
+    const unavailableDates = initUnavailableDates[currentMonth] ?? []
     return createCalendar(
       unavailableDates,
       currentFullDate,
       firstSelectedDate,
       lastSelectedDate
     )
-  }, [currentFullDate, currentMonth, firstSelectedDate, lastSelectedDate])
+  }, [
+    currentFullDate,
+    currentMonth,
+    firstSelectedDate,
+    lastSelectedDate,
+    initUnavailableDates,
+  ])
 
   const setPrevMonth = () =>
     setCurrentFullDate(
@@ -124,7 +127,7 @@ export const useCalendar = () => {
     setError('')
 
     if (firstDate !== '' && lastDate !== '') {
-      const unavailableDates = UNAVAILABLE_DATES[currentMonth] ?? []
+      const unavailableDates = initUnavailableDates[currentMonth] ?? []
       const hasUnavailable = unavailableDates.some((day) => {
         const date = new Date(currentFullDate.getFullYear(), currentMonth, day)
         return date >= firstDate && date <= lastDate

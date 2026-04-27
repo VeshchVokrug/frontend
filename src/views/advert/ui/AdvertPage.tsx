@@ -40,6 +40,11 @@ const photos = [
   },
 ]
 
+const UNAVAILABLE_DATES: Record<number, number[]> = {
+  3: [1, 5, 7, 8, 9, 15, 16, 17, 19, 20],
+  4: [1, 2, 3, 6, 7, 8],
+}
+
 export default function AdvertPage({ category, id }: Props) {
   return (
     <>
@@ -55,7 +60,7 @@ export default function AdvertPage({ category, id }: Props) {
           </div>
           <div className="flex w-full flex-col gap-15">
             <AdvertHeader title="Дрель аккумуляторная" price={1500} />
-            <AdvertCalendar />
+            <AdvertCalendar unavailableDates={UNAVAILABLE_DATES} />
             <AdvertOwnerInfo
               name="Пользователь"
               status="Частное лицо"

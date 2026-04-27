@@ -8,11 +8,11 @@ import { useEffect } from 'react'
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   const router = useRouter()
-  const { data: user } = useCurrentUser()
+  const { data: user, failureCount } = useCurrentUser()
 
   useEffect(() => {
     const accessToken = tokenStorage.getAccessToken()
-    if (!accessToken || !user) {
+    if (!accessToken || (!user && failureCount >= 2)) {
       router.push('/login')
     }
 

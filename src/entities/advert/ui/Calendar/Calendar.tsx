@@ -3,7 +3,19 @@
 import { MONTHS, WEEKDAYS } from '@/shared/constants/calendar'
 import { useCalendar } from '../../model/useCalendar'
 
-export default function Calendar() {
+type CalendarProps = {
+  buttonText?: string
+  mode?: 'rent' | 'create'
+  unavailableDates?: Record<number, number[]>
+  onSelect?: (dates: string[]) => void
+}
+
+export default function Calendar({
+  buttonText = 'Выбрать',
+  mode = 'rent',
+  unavailableDates,
+  onSelect,
+}: CalendarProps) {
   const {
     calendar,
     currentMonth,
@@ -13,14 +25,14 @@ export default function Calendar() {
     firstSelectedDate,
     lastSelectedDate,
     error,
-  } = useCalendar()
+  } = useCalendar(unavailableDates)
 
   return (
     <section className="bg-gray w-fit rounded-[30px] px-12.5 py-7.5">
       <div className="flex justify-between">
         <h3 className="text-[30px] font-medium">Выбор даты</h3>
         <div className="flex gap-5">
-          <button onClick={setPrevMonth}>
+          <button onClick={setPrevMonth} type="button">
             <svg
               width="13"
               height="23"
@@ -40,7 +52,7 @@ export default function Calendar() {
           <p className="text-[30px] font-medium uppercase">
             {MONTHS[currentMonth]}
           </p>
-          <button onClick={setNextMonth}>
+          <button onClick={setNextMonth} type="button">
             <svg
               width="13"
               height="23"
@@ -75,6 +87,7 @@ export default function Calendar() {
                       className={`disabled:text-disabled relative isolate text-[30px] ${date === '' && 'opacity-0'} ${isSelected && 'text-main'}`}
                       disabled={!isActive && !isSelected}
                       onClick={() => selectDate(index, indexDate)}
+                      type="button"
                     >
                       {date === '' ? 0 : new Date(date).getDate()}
                     </button>
@@ -86,14 +99,31 @@ export default function Calendar() {
         ))}
       </ul>
       <div className="mt-5 flex items-center justify-between">
-        <p className="text-disabled text-[20px]">Забронировано</p>
+        {mode === 'rent' && (
+          <p className="text-disabled text-[20px]">Забронировано</p>
+        )}
         <button
-          className="bg-main hover:bg-main-hover disabled:bg-disabled active:bg-main-active rounded-4xl px-7.5 py-2.5 text-[18px] font-bold text-white transition"
+          className="bg-main hover:bg-main-hover disabled:bg-disabled active:bg-main-active ml-auto rounded-4xl px-7.5 py-2.5 text-[18px] font-bold text-white transition"
           disabled={
             error.length > 0 || (!firstSelectedDate && !lastSelectedDate)
           }
+          onClick={() =>
+            onSelect?.(
+              calendar.flat().reduce<string[]>((selectedDates, day) => {
+                if (day.isSelected && day.date !== '') {
+                  selectedDates.push(
+                    day.date instanceof Date
+                      ? day.date.toISOString()
+                      : new Date(day.date).toISOString()
+                  )
+                }
+
+                return selectedDates
+              }, [])
+            )
+          }
         >
-          Выбрать
+          {buttonText}
         </button>
       </div>
       {error && <p className="text-red text-2xl">{error}</p>}
