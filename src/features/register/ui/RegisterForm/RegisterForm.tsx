@@ -46,12 +46,10 @@ export default function RegisterForm() {
     <form
       onSubmit={handleSubmit}
       autoComplete="off"
-      className="bg-gray flex h-fit w-fit min-w-187.5 flex-col gap-13 rounded-[30px] p-18 pb-12"
+      className="bg-gray flex h-fit w-fit min-w-160 flex-col gap-10 rounded-[30px] px-18 py-14"
     >
-      <h1 className="text-center text-[50px] font-bold text-gray-800">
-        Зарегистрироваться
-      </h1>
-      <div className="flex flex-col gap-10">
+      <h1 className="text-center text-[36px] font-bold">Зарегистрироваться</h1>
+      <div className="flex flex-col gap-7.5">
         <Input
           type="text"
           name="email"
@@ -98,22 +96,22 @@ export default function RegisterForm() {
         />
       </div>
 
-      <div className="flex flex-col items-center gap-7.5">
+      <div className="flex flex-col items-center gap-10">
         <div>
           <button
             type="submit"
-            className="bg-main w-fit rounded-[20px] p-1 px-15 py-4 text-[40px] font-medium text-white transition-all hover:opacity-80"
+            className="bg-main hover:bg-main-hover active:bg-main-active disabled:bg-disabled w-fit rounded-[20px] px-12.5 py-4 text-[30px] font-medium text-white transition"
           >
             Зарегистрироваться
           </button>
           {serverError && (
-            <p className="text-[40px] text-red-500">{serverError}</p>
+            <p className="text-[25px] text-red-500">{serverError}</p>
           )}
         </div>
 
         <Link
           href="/login"
-          className="text-main text-center text-[36px] underline"
+          className="text-main text-center text-[30px] underline"
         >
           Войти
         </Link>

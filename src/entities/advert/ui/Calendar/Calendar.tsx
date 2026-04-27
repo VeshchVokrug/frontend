@@ -88,8 +88,10 @@ export default function Calendar() {
       <div className="mt-5 flex items-center justify-between">
         <p className="text-disabled text-[20px]">Забронировано</p>
         <button
-          className="disabled:bg-dark-gray bg-main rounded-4xl px-7.5 py-2.5 text-[18px] font-bold text-white transition hover:opacity-80 disabled:hover:opacity-100"
-          disabled={error.length > 0 || !firstSelectedDate || !lastSelectedDate}
+          className="bg-main hover:bg-main-hover disabled:bg-disabled active:bg-main-active rounded-4xl px-7.5 py-2.5 text-[18px] font-bold text-white transition"
+          disabled={
+            error.length > 0 || (!firstSelectedDate && !lastSelectedDate)
+          }
         >
           Выбрать
         </button>

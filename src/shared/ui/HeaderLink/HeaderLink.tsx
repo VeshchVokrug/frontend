@@ -1,27 +1,19 @@
-import Image from 'next/image'
 import Link from 'next/link'
 
 type Props = {
   text: string
   href: string
-  image: string
+  children: React.ReactNode
 }
 
-export default function HeaderLink({ text, href, image }: Props) {
+export default function HeaderLink({ text, href, children }: Props) {
   return (
     <Link
       href={href}
-      className="flex! flex-col items-center transition-opacity hover:opacity-80"
+      className="group flex! flex-col items-center transition-opacity"
     >
-      <Image
-        src={image}
-        alt={`Иконка "${text}"`}
-        width={0}
-        height={0}
-        sizes="100vw"
-        className="h-auto w-auto"
-      />
-      <span className="text-xl">{text}</span>
+      {children}
+      <span className="group-hover:text-main text-xl transition">{text}</span>
     </Link>
   )
 }

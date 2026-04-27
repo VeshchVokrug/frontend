@@ -41,10 +41,10 @@ export default function LoginForm() {
     <form
       onSubmit={handleSubmit}
       autoComplete="off"
-      className="bg-gray flex h-fit w-fit min-w-187.5 flex-col gap-13 rounded-[30px] p-18"
+      className="bg-gray flex h-fit w-fit min-w-160 flex-col gap-10 rounded-[30px] px-18 py-14"
     >
-      <h1 className="text-center text-[50px] font-bold text-gray-800">Войти</h1>
-      <div className="flex flex-col gap-9">
+      <h1 className="text-center text-[36px] font-bold">Войти</h1>
+      <div className="flex flex-col gap-7.5">
         <Input
           type="text"
           name="email"
@@ -73,20 +73,20 @@ export default function LoginForm() {
         />
       </div>
 
-      <div className="flex flex-col items-center gap-7.5">
+      <div className="flex flex-col items-center gap-10">
         <div>
           <button
             type="submit"
-            className="bg-main w-fit rounded-[20px] p-1 px-22.5 py-4 text-[40px] font-medium text-white transition-all hover:opacity-80"
+            className="bg-main hover:bg-main-hover active:bg-main-active disabled:bg-disabled w-fit rounded-[20px] px-22.5 py-4 text-[30px] font-medium text-white transition"
           >
             Войти
           </button>
-          {serverError && <p className="text-sm text-red-500">{serverError}</p>}
+          {serverError && <p className="text-red text-[25px]">{serverError}</p>}
         </div>
 
         <Link
           href="/register"
-          className="text-main text-center text-[36px] underline"
+          className="text-main text-center text-[30px] underline"
         >
           Зарегистрироваться
         </Link>

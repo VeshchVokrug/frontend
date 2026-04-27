@@ -13,7 +13,7 @@ export default function AdvertHeader({ title, price }: Props) {
           <span>₽</span>
         </p>
 
-        <button className="bg-main rounded-4xl px-7.5 py-5 text-3xl font-bold text-white transition hover:opacity-80">
+        <button className="bg-main hover:bg-main-hover disabled:bg-disabled active:bg-main-active rounded-4xl px-7.5 py-5 text-3xl font-bold text-white transition">
           Добавить в избранное
         </button>
       </div>

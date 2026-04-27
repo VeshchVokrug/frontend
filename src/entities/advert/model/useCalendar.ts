@@ -109,6 +109,16 @@ export const useCalendar = () => {
       return
     }
 
+    if (
+      firstDate instanceof Date &&
+      lastDate instanceof Date &&
+      firstDate.getTime() === lastDate.getTime()
+    ) {
+      setFirstSelectedDate('')
+      setLastSelectedDate('')
+      return
+    }
+
     setFirstSelectedDate(firstDate)
     setLastSelectedDate(lastDate)
     setError('')

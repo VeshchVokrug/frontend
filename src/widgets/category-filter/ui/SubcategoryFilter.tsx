@@ -27,7 +27,7 @@ export default function SubcategoryFilter({
               }`}
             >
               <button
-                className="hover:text-main text-left text-2xl transition"
+                className="hover:text-main-hover active:text-main-active text-left text-2xl transition"
                 onClick={() => onSelect(name)}
                 disabled={name === subcategory}
               >
