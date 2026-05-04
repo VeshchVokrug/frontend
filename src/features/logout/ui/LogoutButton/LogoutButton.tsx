@@ -13,9 +13,9 @@ export default function LogoutButton() {
   return (
     <button
       onClick={handleClick}
-      className="bg-red ml-auto w-fit rounded-3xl px-5 py-2 font-medium text-white transition hover:bg-red-600"
+      className="bg-main hover:bg-main-hover shadow-shadow active:bg-main-active w-full max-w-80 rounded-[30px] py-3.25 text-[30px]/[36px] font-bold text-white shadow-md/30 transition"
     >
-      Выйти из аккаунта
+      Выйти
     </button>
   )
 }

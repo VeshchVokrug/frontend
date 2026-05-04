@@ -25,11 +25,13 @@ export default function AdvertList({
       <div
         className={`mb-5 grid justify-center gap-15.5 ${gridCols && GRID[gridCols]}`}
       >
-        {advertList.map((advert) => (
+        {advertList?.map((advert) => (
           <AdvertCard {...advert} key={advert.id} />
         ))}
       </div>
-      <Pagination currentPage={page} totalPages={12} setPage={setPage} />
+      {advertList?.length > 6 && (
+        <Pagination currentPage={page} totalPages={12} setPage={setPage} />
+      )}
     </section>
   )
 }

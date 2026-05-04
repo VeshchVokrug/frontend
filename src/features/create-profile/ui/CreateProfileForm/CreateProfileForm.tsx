@@ -3,19 +3,28 @@
 import Input from '@/shared/ui/Input'
 import { useState } from 'react'
 import { createProfileInputData, createProfileSchema } from '../../model/schema'
-import { CATEGORIES } from '@/shared/constants/categories'
+
 import { ZodFormattedError } from 'zod'
 import { useCreateProifle } from '../../model/use-create-profile'
 import { useRouter } from 'next/navigation'
+import UploadInput from '@/shared/ui/UploadInput'
 
 export default function CreateProfileForm() {
   const { mutate: createProfile } = useCreateProifle()
   const router = useRouter()
 
+  const [fullName, setFullName] = useState<{
+    firstName: string
+    lastName: string
+  }>({
+    firstName: '',
+    lastName: '',
+  })
+
   const [profileData, setProfileData] = useState<createProfileInputData>({
     name: '',
     bio: '',
-    favoriteCategories: [],
+    phone: '',
   })
 
   const [errors, setErrors] =
@@ -40,82 +49,111 @@ export default function CreateProfileForm() {
   }
 
   return (
-    <main className="flex h-full justify-center">
-      <form className="flex w-3xl flex-col gap-5" onSubmit={handleSubmit}>
-        <h1 className="mb-5 text-center text-5xl font-bold">
+    <main className="h-full w-full">
+      <form className="flex w-325 flex-col gap-5" onSubmit={handleSubmit}>
+        <h1 className="mb-16.25 text-left text-[36px] font-bold">
           Создание профиля
         </h1>
-        <Input
-          type="text"
-          placeholder="Имя"
-          name="name"
-          label="Введите имя"
-          value={profileData.name}
-          onChange={(evt) =>
-            setProfileData((prev) => ({ ...prev, name: evt.target.value }))
-          }
-          error={errors?.name?._errors.join(', ')}
-          required
-        />
-        <label>
-          <p className="mb-1 ml-1.5 block text-sm font-medium text-gray-600">
-            Введите информацию о себе
-          </p>
-          <textarea
-            placeholder="Информация о себе"
-            name="bio"
-            value={profileData.bio}
-            onChange={(evt) =>
-              setProfileData((prev) => ({ ...prev, bio: evt.target.value }))
-            }
-            required={false}
-            className="w-full resize-none rounded-2xl bg-white px-2.5 py-1.5"
-          />
-          {errors?.bio?._errors.length && (
-            <p className="mt-1 text-sm text-red-600">
-              {errors?.bio?._errors.join(', ')}
+
+        <div className="flex flex-col gap-7.75">
+          <fieldset className="flex w-full max-w-284">
+            <p className="w-full max-w-77.5 text-[32px] font-bold">
+              Имя и фамилия
             </p>
-          )}
-        </label>
-        <label>
-          <p className="mb-1 block text-sm font-medium text-gray-600">
-            Выберите любимые категории
-          </p>
-          <div>
-            {CATEGORIES.map(({ title, slug }, index) => (
+
+            <div className="flex w-full gap-6.5">
               <Input
-                key={index}
-                type="checkbox"
-                placeholder={title}
-                label={title}
-                name="favoriteCategories"
-                value={slug}
+                type="text"
+                name="firstName"
+                placeholder="Введите имя"
+                value={fullName.firstName}
                 onChange={(evt) =>
-                  setProfileData((prev) => {
-                    const favoriteCategories = prev.favoriteCategories ?? []
-                    return {
+                  setFullName((prev) => {
+                    const fullName = { ...prev, firstName: evt.target.value }
+                    setProfileData((prev) => ({
                       ...prev,
-                      favoriteCategories: favoriteCategories.includes(
-                        evt.target.value
-                      )
-                        ? favoriteCategories.filter(
-                            (cat) => cat !== evt.target.value
-                          )
-                        : [...favoriteCategories, evt.target.value],
-                    }
+                      name: Object.values(fullName).join(' '),
+                    }))
+
+                    return fullName
                   })
                 }
-                required={false}
+                error={errors?.name?._errors.join(', ')}
+                required
+                layout="horizontal"
+                size="lg"
+                variant="filled"
               />
-            ))}
-          </div>
-        </label>
+
+              <Input
+                type="text"
+                placeholder="Введите фамилию"
+                name="lastName"
+                value={fullName.lastName}
+                onChange={(evt) =>
+                  setFullName((prev) => {
+                    const fullName = { ...prev, lastName: evt.target.value }
+                    setProfileData((prev) => ({
+                      ...prev,
+                      name: Object.values(fullName).join(' '),
+                    }))
+
+                    return fullName
+                  })
+                }
+                error={errors?.name?._errors.join(', ')}
+                required={false}
+                layout="horizontal"
+                size="lg"
+                variant="filled"
+              />
+            </div>
+          </fieldset>
+
+          <fieldset className="max-w-229.5">
+            <Input
+              type="tel"
+              label="Телефон"
+              placeholder="Ваш номер в формате +7( )"
+              name="phone"
+              value={profileData.phone}
+              onChange={(evt) =>
+                setProfileData((prev) => ({ ...prev, phone: evt.target.value }))
+              }
+              required={false}
+              layout="horizontal"
+              size="lg"
+              variant="filled"
+              error={errors?.phone?._errors.join(', ')}
+            />
+          </fieldset>
+
+          <fieldset className="max-w-284">
+            <Input
+              type="textarea"
+              label="Описание профиля"
+              placeholder="Добавьте описание профиля"
+              name="bio"
+              value={profileData.bio}
+              onChange={(evt) =>
+                setProfileData((prev) => ({ ...prev, bio: evt.target.value }))
+              }
+              required={false}
+              error={errors?.bio?._errors.join(', ')}
+              layout="horizontal"
+              size="lg"
+              variant="filled"
+            />
+          </fieldset>
+
+          <UploadInput label="Фото профиля" />
+        </div>
 
         <button
           type="submit"
-          className="bg-main mx-auto w-fit rounded-3xl px-5 py-3 font-medium text-white transition-all hover:opacity-80"
+          className="bg-main hover:bg-main-hover disabled:bg-disabled active:bg-main-active mt-18.5 w-fit rounded-3xl px-7.5 py-5 text-[30px]/[36px] font-bold text-white transition-all"
         >
-          Создать профиль
+          Сохранить
         </button>
 
         {serverErrors && (

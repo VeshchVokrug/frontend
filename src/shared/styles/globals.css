@@ -42,7 +42,9 @@ a {
   --color-secondary: #7d7d7d;
   --color-dark-gray: #545454;
   --color-red: #ff0000;
+  --color-dangerous: #ff5f5f;
   --color-disabled: #525252;
   --color-main-active: #207695;
   --color-main-hover: #34c1f4;
+  --color-shadow: #6d6d6d;
 }

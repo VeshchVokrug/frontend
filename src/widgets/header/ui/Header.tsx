@@ -31,7 +31,7 @@ export default function Header() {
       </div>
 
       <div className="flex items-center gap-12">
-        <HeaderLink text="Избранное" href="/favorites">
+        <HeaderLink text="Избранное" href="profile/favorites">
           <svg
             width="38"
             height="33"

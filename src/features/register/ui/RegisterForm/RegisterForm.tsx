@@ -96,7 +96,7 @@ export default function RegisterForm() {
         />
       </div>
 
-      <div className="flex flex-col items-center gap-10">
+      <div className="flex flex-col items-center gap-10 text-center">
         <div>
           <button
             type="submit"

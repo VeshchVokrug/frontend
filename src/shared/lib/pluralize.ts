@@ -1,0 +1,12 @@
+export const usePlural = (
+  count: number,
+  forms: [string, string, string]
+): string => {
+  const abs = Math.abs(count) % 100
+  const mod10 = abs % 10
+
+  if (abs > 10 && abs < 20) return forms[2]
+  if (mod10 > 1 && mod10 < 5) return forms[1]
+  if (mod10 === 1) return forms[0]
+  return forms[2]
+}

@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
 import { userEvent, within } from 'storybook/test'
-import AdvertSelect from './AdvertSelect'
+import Select from './Select'
 
 const SAMPLE_OPTIONS = [
   { value: 'electronics', text: 'Электроника' },
@@ -9,15 +9,15 @@ const SAMPLE_OPTIONS = [
   { value: 'sport', text: 'Спорт' },
 ]
 
-const meta: Meta<typeof AdvertSelect> = {
-  title: 'features/create-advert/AdvertSelect',
-  component: AdvertSelect,
+const meta: Meta<typeof Select> = {
+  title: 'shared/Select',
+  component: Select,
   tags: ['autodocs'],
 }
 
 export default meta
 
-type Story = StoryObj<typeof AdvertSelect>
+type Story = StoryObj<typeof Select>
 
 export const Default: Story = {
   args: {

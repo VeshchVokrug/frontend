@@ -8,18 +8,21 @@ import { useEffect } from 'react'
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   const router = useRouter()
-  const { data: user, failureCount } = useCurrentUser()
+  const { data: user, failureCount, failureReason } = useCurrentUser()
 
   useEffect(() => {
     const accessToken = tokenStorage.getAccessToken()
-    if (!accessToken || (!user && failureCount >= 2)) {
+    if (
+      !accessToken ||
+      (!user && failureCount >= 2 && failureReason?.status !== 404)
+    ) {
       router.push('/login')
     }
 
     const handleLogout = () => router.push('/login')
     window.addEventListener('auth:logout', handleLogout)
     return () => window.removeEventListener('auth:logout', handleLogout)
-  }, [router])
+  }, [router, failureCount, user, failureReason])
 
   return (
     <>

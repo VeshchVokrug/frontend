@@ -4,13 +4,13 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { ZodFormattedError } from 'zod'
 import Calendar from '@/entities/advert/ui/Calendar'
-import AdvertInput from './AdvertInput'
-import AdvertSelect from './AdvertSelect'
+import AdvertSelect from '../../../../shared/ui/Select'
 import UploadInput from '@/shared/ui/UploadInput'
 import { createAdvertSchema, CreateAdvertInputData } from '../../model/schema'
 
 import { CATEGORIES } from '@/shared/constants/categories'
 import { useCreateAdvert } from '../../model/use-create-advert'
+import Input from '@/shared/ui/Input'
 
 export default function CreateAdvertForm() {
   const { mutate: createAdvert } = useCreateAdvert()
@@ -59,15 +59,18 @@ export default function CreateAdvertForm() {
       <div className="flex w-full gap-3.75">
         <div className="flex w-full flex-col gap-9.5">
           <fieldset className="flex w-full max-w-327 flex-col gap-9.5">
-            <AdvertInput
+            <Input
               name="name"
               label="Название вещи"
               placeholder="Введите название вещи"
               value={advertData.name}
               onChange={(e) => set('name', e.target.value)}
               error={errors?.name?._errors.join(', ')}
+              layout="horizontal"
+              size="lg"
+              variant="filled"
             />
-            <AdvertInput
+            <Input
               type="textarea"
               name="description"
               label="Описание вещи"
@@ -75,6 +78,9 @@ export default function CreateAdvertForm() {
               value={advertData.description}
               onChange={(e) => set('description', e.target.value)}
               error={errors?.description?._errors.join(', ')}
+              layout="horizontal"
+              size="lg"
+              variant="filled"
             />
           </fieldset>
 
@@ -111,7 +117,7 @@ export default function CreateAdvertForm() {
             )}
 
             <div className="w-179">
-              <AdvertInput
+              <Input
                 type="number"
                 name="price"
                 label="Стоимость вещи"
@@ -119,6 +125,9 @@ export default function CreateAdvertForm() {
                 placeholder="Укажите стоимость в рублях"
                 onChange={(e) => set('price', Number(e.target.value))}
                 error={errors?.price?._errors.join(', ')}
+                layout="horizontal"
+                size="lg"
+                variant="filled"
               />
             </div>
 
@@ -155,7 +164,7 @@ export default function CreateAdvertForm() {
 
         <button
           type="submit"
-          className="bg-main hover:bg-main-hover disabled:bg-disabled active:bg-main-active mt-auto ml-auto h-fit rounded-4xl px-7.5 py-5 text-[30px]/[36px] font-bold text-nowrap text-white transition"
+          className="bg-main hover:bg-main-hover disabled:bg-disabled active:bg-main-active mt-auto mb-14 ml-auto h-fit rounded-4xl px-7.5 py-5 text-[30px]/[36px] font-bold text-nowrap text-white transition"
         >
           Предпросмотр карточки
         </button>

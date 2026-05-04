@@ -16,7 +16,7 @@ type Props = {
   error?: string
 }
 
-export default function AdvertSelect({
+export default function Select({
   name,
   value,
   onChange,

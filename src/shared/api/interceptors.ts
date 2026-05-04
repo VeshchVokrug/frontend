@@ -37,7 +37,8 @@ export const setupInterceptors = () => {
         error.response?.status !== 401 ||
         !originalRequest ||
         originalRequest._retry ||
-        originalRequest.url?.includes('/identity/auth/refresh')
+        originalRequest.url?.includes('/identity/auth/refresh') ||
+        !tokenStorage.getAccessToken()
       ) {
         return Promise.reject(error)
       }
