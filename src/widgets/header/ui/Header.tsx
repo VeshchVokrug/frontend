@@ -1,8 +1,11 @@
+import { useCurrentUser } from '@/entities/user/model/use-current-user'
 import HeaderLink from '@/shared/ui/HeaderLink'
 import Image from 'next/image'
 import Link from 'next/link'
 
 export default function Header() {
+  const { data: currentUser } = useCurrentUser()
+
   return (
     <header className="mx-auto mt-13 mb-15 flex w-425 items-center justify-between">
       <Link href="/" className="flex h-fit w-fit">
@@ -48,7 +51,7 @@ export default function Header() {
             />
           </svg>
         </HeaderLink>
-        <HeaderLink text="Профиль" href="/profile">
+        <HeaderLink text={currentUser ? 'Профиль' : 'Войти'} href="/profile">
           <svg
             width="33"
             height="35"

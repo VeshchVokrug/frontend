@@ -3,6 +3,15 @@ import { CATEGORIES } from '@/shared/constants/categories'
 import Header from '@/widgets/header'
 import AdvertList from '@/widgets/advert-list'
 
+// TODO: заменить на данные из API
+const ADVERT_LIST = Array.from({ length: 8 }, (_, index) => ({
+  id: String(index + 1),
+  title: 'Название',
+  category: 'electronics',
+  image: '/images/logo.png',
+  price: Math.floor(Math.random() * 5000),
+}))
+
 export default function MainPage() {
   return (
     <>
@@ -13,15 +22,7 @@ export default function MainPage() {
             <CategoryCard {...category} key={index} />
           ))}
         </div>
-        <AdvertList
-          advertList={Array.from({ length: 8 }, (_, index) => ({
-            id: String(index + 1),
-            title: 'Название',
-            category: 'electronics',
-            image: '/images/logo.png',
-            price: Math.floor(Math.random() * 5000),
-          }))}
-        />
+        <AdvertList advertList={ADVERT_LIST} />
       </main>
     </>
   )

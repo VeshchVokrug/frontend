@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { ZodFormattedError } from 'zod'
-import Calendar from '@/entities/advert/ui/Calendar'
+import { Calendar } from '@/widgets/calendar'
 import AdvertSelect from '../../../../shared/ui/Select'
 import UploadInput from '@/shared/ui/UploadInput'
 import { createAdvertSchema, CreateAdvertInputData } from '../../model/schema'

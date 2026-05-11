@@ -1,5 +1,6 @@
 'use client'
 
+import { UserInfo } from '@/entities/user'
 import { User } from '@/entities/user/model/schema'
 import LogoutButton from '@/features/logout/ui/LogoutButton'
 import {
@@ -8,7 +9,7 @@ import {
 } from '@/shared/constants/profile'
 import { formatDateRange } from '@/shared/lib/format-date-range'
 import { usePlural } from '@/shared/lib/pluralize'
-import Image from 'next/image'
+
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 
@@ -43,40 +44,7 @@ export default function ProfilePage({ user }: { user: User }) {
   return (
     <main className="mx-auto flex w-full max-w-425 flex-col gap-10 pb-10">
       <div className="flex gap-10.5">
-        <section className="bg-gray shadow-shadow flex-2 flex-col gap-6 rounded-[30px] p-7.75 shadow-md/40">
-          <div className="mb-9.5 flex items-center gap-5">
-            <div className="aspect-square w-37.5 rounded-[20px] bg-white">
-              <Image
-                src={
-                  user.avatarUrl
-                    ? user.avatarUrl
-                    : '/images/default-user-avatar.png'
-                }
-                alt={`Фотография пользователя ${user.name}`}
-                width={150}
-                height={150}
-                className="object-cover"
-              />
-            </div>
-            <p className="text-[36px] font-bold">{user.name}</p>
-          </div>
-          <div className="flex flex-col gap-2.5">
-            <div className="flex items-center gap-5">
-              <p className="text-[30px]">Описание профиля:</p>
-              {user.bio && <p className="text-[30px]">{user.bio}</p>}
-            </div>
-
-            <div className="flex items-center gap-5">
-              <p className="text-[30px]">Email:</p>
-              {user.email && <p className="text-[30px]">{user.email}</p>}
-            </div>
-
-            <div className="flex items-center gap-5">
-              <p className="text-[30px]">Телефон:</p>
-              {user.phone && <p className="text-[30px]">{user.phone}</p>}
-            </div>
-          </div>
-        </section>
+        <UserInfo user={user} />
         <section className="bg-main shadow-shadow flex-1 flex-col gap-6 rounded-[30px] px-10 py-11.25 text-white shadow-md/40">
           <h2 className="mb-14.25 text-[36px] font-bold">Сдать в аренду</h2>
           <div>

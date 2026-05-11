@@ -1,10 +1,11 @@
 import {
-  AdvertCalendar,
   AdvertHeader,
   AdvertOwnerInfo,
   AdvertPhotoSlider,
   AdvertСharacteristics,
 } from '@/entities/advert'
+import { Calendar } from '@/widgets/calendar'
+
 import Header from '@/widgets/header'
 
 type Props = {
@@ -60,7 +61,7 @@ export default function AdvertPage({ category, id }: Props) {
           </div>
           <div className="flex w-full flex-col gap-15">
             <AdvertHeader title="Дрель аккумуляторная" price={1500} />
-            <AdvertCalendar unavailableDates={UNAVAILABLE_DATES} />
+            <Calendar unavailableDates={UNAVAILABLE_DATES} />
             <AdvertOwnerInfo
               name="Пользователь"
               status="Частное лицо"

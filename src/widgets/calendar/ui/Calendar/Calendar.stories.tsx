@@ -3,7 +3,7 @@ import { userEvent, within } from 'storybook/test'
 import Calendar from './Calendar'
 
 const meta: Meta<typeof Calendar> = {
-  title: 'entities/advert/Calendar',
+  title: 'widgets/Calendar',
   component: Calendar,
   tags: ['autodocs'],
 }

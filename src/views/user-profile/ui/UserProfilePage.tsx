@@ -1,7 +1,6 @@
+import { UserInfo } from '@/entities/user'
 import { User } from '@/entities/user/model/schema'
 import AdvertList from '@/widgets/advert-list'
-
-import Image from 'next/image'
 
 // TODO:Заменить на данные из API
 const THING_COUNT = 3
@@ -17,34 +16,14 @@ const THINGS = Array.from({ length: 3 }, (_, index) => ({
 export default function UserProfilePage({ user }: { user: User }) {
   return (
     <main className="mx-auto flex w-full max-w-425 gap-16.75 pb-10">
-      <div className="flex flex-col gap-7.5">
-        <section className="bg-gray shadow-shadow relative flex flex-2 flex-col gap-5 rounded-[30px] p-8.5 shadow-md/40">
-          <div className="flex flex-col justify-center gap-5">
-            <div className="aspect-square w-25 rounded-[20px] bg-white">
-              <Image
-                src={
-                  user.avatarUrl
-                    ? user.avatarUrl
-                    : '/images/default-user-avatar.png'
-                }
-                alt={`Фотография пользователя ${user.name}`}
-                width={100}
-                height={100}
-                className="object-cover"
-              />
-            </div>
-            <p className="text-[36px] font-bold">{user.name}</p>
-          </div>
-
-          <div>
-            <p className="text-[30px]">Описание профиля:</p>
-            {user.bio && <p className="text-[30px]">{user.bio}</p>}
-          </div>
-
-          <button className="shadow-shadow bg-dangerous hover:bg-red absolute top-5.75 right-4.25 aspect-square w-12.5 rounded-full text-[30px] text-white shadow-md/60 transition">
-            !
-          </button>
-        </section>
+      <div className="flex max-w-100.5 flex-col gap-7.5">
+        <UserInfo
+          user={user}
+          isVertical
+          showReportButton
+          imageSize={100}
+          isCurrentUserProfile={false}
+        />
 
         <section className="bg-gray shadow-shadow relative flex-2 rounded-[30px] p-8.5 shadow-md/40">
           <div className="flex flex-col gap-5">

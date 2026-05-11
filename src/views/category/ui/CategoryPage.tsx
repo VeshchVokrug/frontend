@@ -16,6 +16,14 @@ type CategoryPageProps = {
   }
 }
 
+const ADVERT_LIST = Array.from({ length: 6 }, (_, index) => ({
+  id: String(index + 1),
+  title: 'Название',
+  category: 'electronics',
+  image: '/images/logo.png',
+  price: Math.floor(Math.random() * 5000),
+}))
+
 export default function CategoryPage({
   categoryData,
   filterParams,
@@ -29,16 +37,7 @@ export default function CategoryPage({
           filterParams={filterParams}
         />
         <div>
-          <AdvertList
-            advertList={Array.from({ length: 6 }, (_, index) => ({
-              id: String(index + 1),
-              title: 'Название',
-              category: 'electronics',
-              image: '/images/logo.png',
-              price: Math.floor(Math.random() * 5000),
-            }))}
-            gridCols={3}
-          />
+          <AdvertList advertList={ADVERT_LIST} gridCols={3} />
         </div>
       </main>
     </>
