@@ -1,0 +1,15 @@
+name: thingaround-frontend
+
+services:
+  app:
+    build: .
+    restart: unless-stopped
+    ports:
+      - '3000:3000'
+    networks:
+      - thingaround-network
+
+networks:
+  thingaround-network:
+    external: true
+    name: server_thingaround-network

@@ -1,3 +1,5 @@
+'use client'
+
 import { useCurrentUser } from '@/entities/user/model/use-current-user'
 import HeaderLink from '@/shared/ui/HeaderLink'
 import Image from 'next/image'
