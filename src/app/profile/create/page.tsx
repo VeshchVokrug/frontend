@@ -1,7 +1,7 @@
 'use client'
 
 import { useCurrentUser } from '@/entities/user/model/use-current-user'
-import CreateProfileForm from '@/features/create-profile/ui/CreateProfileForm/CreateProfileForm'
+import CreateProfileForm from '@/features/create-profile/ui/CreateProfileForm'
 import { useRouter } from 'next/navigation'
 import { useEffect } from 'react'
 

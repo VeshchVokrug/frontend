@@ -7,6 +7,8 @@ type Props = {
   multiple?: boolean
   maxFiles?: number
   onChange?: (files: File[]) => void
+  onRemoveExisting?: () => void
+  initialUrl?: string
   label?: string
   error?: string
 }
@@ -15,9 +17,14 @@ export default function UploadInput({
   multiple = true,
   maxFiles = 5,
   onChange,
+  onRemoveExisting,
+  initialUrl,
   label,
   error,
 }: Props) {
+  const [existingUrl, setExistingUrl] = useState<string | null>(
+    initialUrl ?? null
+  )
   const [files, setFiles] = useState<File[]>([])
   const [previews, setPreviews] = useState<string[]>([])
   const [dragging, setDragging] = useState(false)
@@ -43,6 +50,11 @@ export default function UploadInput({
       onChange?.(updated)
       return updated
     })
+  }
+
+  const removeExisting = () => {
+    setExistingUrl(null)
+    onRemoveExisting?.()
   }
 
   const onDrop = (e: React.DragEvent) => {
@@ -82,8 +94,41 @@ export default function UploadInput({
               className="hidden"
             />
 
-            {files.length > 0 && (
+            {(existingUrl || files.length > 0) && (
               <div className="flex flex-wrap justify-center gap-3">
+                {existingUrl && (
+                  <div className="flex flex-col items-center gap-1">
+                    <div className="relative size-20 overflow-hidden rounded-xl">
+                      <Image
+                        src={existingUrl}
+                        alt="Текущее фото"
+                        fill
+                        className="object-cover"
+                      />
+                      <button
+                        type="button"
+                        onClick={removeExisting}
+                        className="absolute top-1 right-1 flex size-5 items-center justify-center rounded-full bg-black/50 text-white transition hover:bg-black/70"
+                      >
+                        <svg
+                          className="size-3"
+                          viewBox="0 0 20 20"
+                          fill="currentColor"
+                        >
+                          <path
+                            fillRule="evenodd"
+                            d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                            clipRule="evenodd"
+                          />
+                        </svg>
+                      </button>
+                    </div>
+                    <span className="text-secondary w-20 truncate text-center text-xs">
+                      Текущее фото
+                    </span>
+                  </div>
+                )}
+
                 {files.map((file, i) => (
                   <div key={i} className="flex flex-col items-center gap-1">
                     <div className="relative size-20 overflow-hidden rounded-xl">

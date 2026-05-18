@@ -95,7 +95,7 @@ export default function ProfilePage({ user }: { user: User }) {
         </Link>
 
         <Link
-          href={`${pathname}/orders?endDate=${new Date().toISOString()}`}
+          href={`${pathname}/orders/previous`}
           className="bg-gray shadow-shadow flex-1 flex-col gap-6 rounded-[30px] px-11 py-10.5 shadow-md/40"
         >
           <h2 className="mb-7 text-[36px] font-bold">Предыдущие заказы</h2>
