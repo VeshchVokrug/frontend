@@ -5,6 +5,7 @@ type Props = {
   status: string
   rating: number
   reviewsCount: number
+  showContactButton?: boolean
 }
 
 export default function OwnerInfo({
@@ -12,6 +13,7 @@ export default function OwnerInfo({
   status,
   rating,
   reviewsCount,
+  showContactButton = true,
 }: Props) {
   return (
     <section className="flex items-center justify-between">
@@ -38,9 +40,11 @@ export default function OwnerInfo({
         </div>
       </div>
 
-      <button className="bg-dark-gray h-fit rounded-4xl px-7.5 py-5 text-[30px]/[1.2] font-bold text-white transition hover:opacity-80">
-        Написать
-      </button>
+      {showContactButton && (
+        <button className="bg-dark-gray h-fit rounded-4xl px-7.5 py-5 text-[30px]/[1.2] font-bold text-white transition hover:opacity-80">
+          Написать
+        </button>
+      )}
     </section>
   )
 }
