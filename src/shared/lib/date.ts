@@ -17,3 +17,18 @@ export const getDatesInRange = (a: Date, b: Date): Date[] => {
   }
   return dates
 }
+
+export const resolveDate = (value: string): Date | null => {
+  if (value === 'today') return new Date()
+  if (value === 'tomorrow') {
+    const d = new Date()
+    d.setDate(d.getDate() + 1)
+    return d
+  }
+  if (value === 'onThisWeek') {
+    const d = new Date()
+    d.setDate(d.getDate() + (7 - d.getDay()))
+    return d
+  }
+  return null
+}

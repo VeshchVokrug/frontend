@@ -9,9 +9,18 @@ export const createAdvertSchema = z.object({
     .string()
     .max(300, 'Описание должно содержать не более 300 символов'),
   category: z.string().min(1, 'Выберите категорию'),
-  subcategory: z.string().min(1, 'Выберите подкатегорию'),
+  subcategory: z.string().optional(),
   price: z.number().positive('Цена должна быть положительным числом'),
-  availableDates: z.array(z.string()).nonempty('Выберите хотя бы одну дату'),
+  city: z
+    .string()
+    .min(2, 'Город должен содержать не менее 2 символов')
+    .max(50, 'Город должен содержать не более 50 символов'),
+  phone: z
+    .string()
+    .min(10, 'Номер телефона должен содержать не менее 10 цифр')
+    .optional()
+    .or(z.literal('')),
+  busyDates: z.array(z.string()).optional(),
   photos: z
     .array(z.string())
     .max(5, 'Максимальное количество фотографий - 5')
@@ -19,3 +28,12 @@ export const createAdvertSchema = z.object({
 })
 
 export type CreateAdvertInputData = z.infer<typeof createAdvertSchema>
+
+export interface CreateAdvertPayload extends CreateAdvertInputData {
+  managerId: string
+  managerName: string
+}
+
+export interface CreateAdvertResponse {
+  listingId: string
+}

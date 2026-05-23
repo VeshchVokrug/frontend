@@ -9,10 +9,10 @@ import { DATE_OPTIONS } from '@/shared/constants/filter'
 type CategoryFilterProps = {
   categoryData: CategoryCardProps
   filterParams: {
-    subcategory: string
-    date: string
-    priceMin: string
-    priceMax: string
+    subcategory?: string
+    date?: string
+    priceMin?: string
+    priceMax?: string
   }
 }
 
@@ -27,18 +27,18 @@ export default function CategoryFilter({
     <aside className="bg-gray h-fit w-full max-w-99 rounded-[20px] px-7 py-8.75">
       <SubcategoryFilter
         categoryData={categoryData}
-        subcategory={filterParams.subcategory}
+        subcategory={filterParams.subcategory ?? ''}
         onSelect={handleSubcategoryClick}
       />
 
       <PriceFilter
-        minPrice={filterParams.priceMin}
-        maxPrice={filterParams.priceMax}
+        minPrice={filterParams.priceMin ?? ''}
+        maxPrice={filterParams.priceMax ?? ''}
         onChange={handlePriceChange}
       />
       <DateFilter
         dates={DATE_OPTIONS}
-        date={filterParams.date}
+        date={filterParams.date ?? ''}
         onChange={handleDateChange}
       />
     </aside>

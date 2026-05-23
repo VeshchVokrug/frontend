@@ -19,6 +19,12 @@ export default function AdvertPhotoSlider({ photos }: Props) {
     setPhotoByIndex,
   } = useAdvertPhotoSlider(photos, 3)
 
+  if (photos.length === 0) {
+    return (
+      <section className="flex h-full max-h-141.5 w-full max-w-188.75 gap-2.5"></section>
+    )
+  }
+
   return (
     <section className="flex gap-2.5">
       <div className="flex flex-col items-center">
@@ -67,8 +73,8 @@ export default function AdvertPhotoSlider({ photos }: Props) {
       </div>
       <div className="relative flex h-141.5 w-131.5 items-center justify-center rounded-3xl">
         <Image
-          src={mainPhoto.img}
-          alt={`Изображение ${mainPhoto.id}`}
+          src={mainPhoto?.img}
+          alt={`Изображение ${mainPhoto?.id}`}
           fill
           className="object-contain"
         />

@@ -3,10 +3,12 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { ZodFormattedError } from 'zod'
+import { toast } from 'sonner'
 import { Calendar } from '@/widgets/calendar'
 import AdvertSelect from '../../../../shared/ui/Select'
 import UploadInput from '@/shared/ui/UploadInput'
 import { createAdvertSchema, CreateAdvertInputData } from '../../model/schema'
+import { useCurrentUser } from '@/entities/user/model/use-current-user'
 
 import { CATEGORIES } from '@/shared/constants/categories'
 import { useCreateAdvert } from '../../model/use-create-advert'
@@ -15,6 +17,7 @@ import Input from '@/shared/ui/Input'
 export default function CreateAdvertForm() {
   const { mutate: createAdvert } = useCreateAdvert()
   const router = useRouter()
+  const { data: currentUser } = useCurrentUser()
 
   const [advertData, setAdvertData] = useState<CreateAdvertInputData>({
     name: '',
@@ -22,13 +25,14 @@ export default function CreateAdvertForm() {
     category: '',
     subcategory: '',
     price: 0,
-    availableDates: [],
+    city: '',
+    phone: '',
+    busyDates: [],
     photos: [],
   })
 
   const [errors, setErrors] =
     useState<ZodFormattedError<CreateAdvertInputData> | null>(null)
-  const [serverError, setServerError] = useState<string | null>(null)
 
   const set = <K extends keyof CreateAdvertInputData>(
     key: K,
@@ -38,7 +42,11 @@ export default function CreateAdvertForm() {
   const handleSubmit = (evt: React.FormEvent) => {
     evt.preventDefault()
     setErrors(null)
-    setServerError(null)
+
+    if (!currentUser) {
+      toast.error('Не удалось получить данные пользователя')
+      return
+    }
 
     const result = createAdvertSchema.safeParse(advertData)
 
@@ -47,10 +55,16 @@ export default function CreateAdvertForm() {
       return
     }
 
-    createAdvert(advertData, {
-      onSuccess: () => router.push('/adverts'),
-      onError: (err) => setServerError(err.message),
-    })
+    createAdvert(
+      {
+        ...advertData,
+        managerId: currentUser.id,
+        managerName: currentUser.name,
+      },
+      {
+        onSuccess: (response) => router.push(`/catalog/${response.listingId}`),
+      }
+    )
   }
 
   return (
@@ -77,6 +91,7 @@ export default function CreateAdvertForm() {
               placeholder="Введите описание вещи"
               value={advertData.description}
               onChange={(e) => set('description', e.target.value)}
+              required={false}
               error={errors?.description?._errors.join(', ')}
               layout="horizontal"
               size="lg"
@@ -105,7 +120,7 @@ export default function CreateAdvertForm() {
               <AdvertSelect
                 name="subcategory"
                 label="Подкатегория вещи"
-                value={advertData.subcategory}
+                value={advertData.subcategory || ''}
                 placeholder="Выберите подкатегорию вещи"
                 options={[
                   { text: 'Подкатегория 1', value: 'subcategory1' },
@@ -131,18 +146,50 @@ export default function CreateAdvertForm() {
               />
             </div>
 
+            <div className="w-229.5">
+              <Input
+                type="text"
+                name="city"
+                label="Город"
+                placeholder="Введите название города"
+                value={advertData.city}
+                onChange={(e) => set('city', e.target.value)}
+                error={errors?.city?._errors.join(', ')}
+                required
+                layout="horizontal"
+                size="lg"
+                variant="filled"
+              />
+            </div>
+
+            <div className="w-229.5">
+              <Input
+                type="tel"
+                label="Телефон"
+                placeholder="Ваш номер в формате +7( )"
+                name="phone"
+                value={advertData.phone}
+                onChange={(e) => set('phone', e.target.value)}
+                error={errors?.phone?._errors.join(', ')}
+                required={false}
+                layout="horizontal"
+                size="lg"
+                variant="filled"
+              />
+            </div>
+
             <div className="flex flex-col">
               <div className="flex gap-9.5">
-                <span className="text-[32px] font-bold">Доступные даты</span>
+                <span className="text-[32px] font-bold">Недоступные даты</span>
                 <Calendar
                   buttonText="Добавить дату"
                   mode="create"
-                  onSelect={(dates) => set('availableDates', dates)}
+                  onSelect={(dates) => set('busyDates', dates)}
                 />
               </div>
-              {errors?.availableDates?._errors.length && (
+              {errors?.busyDates?._errors.length && (
                 <p className="mt-1 text-2xl text-red-500">
-                  {errors.availableDates._errors.join(', ')}
+                  {errors.busyDates._errors.join(', ')}
                 </p>
               )}
             </div>
@@ -158,8 +205,6 @@ export default function CreateAdvertForm() {
             }
             error={errors?.photos?._errors.join(', ')}
           />
-
-          {serverError && <p className="text-sm text-red-500">{serverError}</p>}
         </div>
 
         <button

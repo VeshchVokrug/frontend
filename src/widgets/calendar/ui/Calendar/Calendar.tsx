@@ -10,6 +10,9 @@ type Props = {
   mode?: 'rent' | 'create'
   unavailableDates?: Record<number, number[]>
   onSelect?: (dates: string[]) => void
+  singleRange?: boolean
+  showToast?: boolean
+  autoReset?: boolean
 }
 
 export default function Calendar({
@@ -17,6 +20,9 @@ export default function Calendar({
   mode = 'rent',
   unavailableDates,
   onSelect,
+  singleRange = false,
+  showToast = true,
+  autoReset = true,
 }: Props) {
   const {
     calendar,
@@ -31,9 +37,14 @@ export default function Calendar({
     getSelectedDates,
     error,
     resetSelectedDates,
-  } = useCalendar(unavailableDates)
+  } = useCalendar(unavailableDates, singleRange)
 
-  const handleConfirm = () => onSelect?.(getSelectedDates())
+  const handleConfirm = () => {
+    onSelect?.(getSelectedDates())
+    if (autoReset) {
+      resetSelectedDates()
+    }
+  }
 
   return (
     <section className="bg-gray w-fit rounded-[30px] px-12.5 py-7.5">
@@ -61,6 +72,7 @@ export default function Calendar({
         error={error}
         disabled={error.length > 0 || getSelectedDates().length === 0}
         onConfirm={handleConfirm}
+        showToast={showToast}
       />
     </section>
   )

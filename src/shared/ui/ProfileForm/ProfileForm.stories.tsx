@@ -2,13 +2,14 @@ import type { Meta, StoryObj } from '@storybook/nextjs-vite'
 import ProfileForm from './ProfileForm'
 import { fn } from 'storybook/test'
 
-const meta = {
+const meta: Meta<typeof ProfileForm> = {
   title: 'shared/ProfileForm',
   component: ProfileForm,
   args: {
     onSubmit: fn(),
   },
-} satisfies Meta<typeof ProfileForm>
+  tags: ['autodocs'],
+}
 
 export default meta
 type Story = StoryObj<typeof meta>

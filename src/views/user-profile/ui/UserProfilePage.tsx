@@ -1,19 +1,46 @@
+'use client'
+
+import { useMemo } from 'react'
 import { UserInfo } from '@/entities/user'
 import { User } from '@/entities/user/model/schema'
+import { useUserRentals } from '@/entities/advert'
+import { tokenStorage } from '@/shared/lib/tokens'
 import AdvertList from '@/widgets/advert-list'
 
-// TODO:Заменить на данные из API
-const THING_COUNT = 3
-const RENT_COUNT = 3
-const THINGS = Array.from({ length: 3 }, (_, index) => ({
-  id: String(index + 1),
-  title: 'Название',
-  category: 'electronics',
-  image: '/images/logo.png',
-  price: Math.floor(Math.random() * 5000),
-}))
-
 export default function UserProfilePage({ user }: { user: User }) {
+  const isAuthorized = !!tokenStorage.getAccessToken()
+  const { data: rentals, isLoading, error } = useUserRentals(user?.id)
+
+  const advertList = useMemo(() => {
+    if (!rentals?.items) return []
+    return rentals.items.map((item) => ({
+      id: item.listingId,
+      title: item.title,
+      category: 'general',
+      image: item.imageUrl ?? '',
+      price: item.pricePerDay,
+    }))
+  }, [rentals])
+
+  if (!isAuthorized) {
+    return (
+      <main className="mx-auto flex w-full max-w-425 gap-16.75 pb-10">
+        <div className="flex max-w-100.5 flex-col gap-7.5">
+          <UserInfo
+            user={user}
+            isVertical
+            showReportButton
+            imageSize={100}
+            isCurrentUserProfile={false}
+          />
+        </div>
+        <section className="flex flex-col gap-3.5">
+          <div>Вы должны авторизоваться, чтобы посмотреть вещи пользователя</div>
+        </section>
+      </main>
+    )
+  }
+
   return (
     <main className="mx-auto flex w-full max-w-425 gap-16.75 pb-10">
       <div className="flex max-w-100.5 flex-col gap-7.5">
@@ -28,11 +55,11 @@ export default function UserProfilePage({ user }: { user: User }) {
         <section className="bg-gray shadow-shadow relative flex-2 rounded-[30px] p-8.5 shadow-md/40">
           <div className="flex flex-col gap-5">
             <p className="text-[30px] font-bold">
-              Сдач в аренду: <span className="font-normal">{RENT_COUNT}</span>
+              Сдач в аренду: <span className="font-normal">{advertList.length}</span>
             </p>
             <p className="text-[30px] font-bold">
               Количество вещей:{' '}
-              <span className="font-normal">{THING_COUNT}</span>
+              <span className="font-normal">{advertList.length}</span>
             </p>
           </div>
         </section>
@@ -49,10 +76,12 @@ export default function UserProfilePage({ user }: { user: User }) {
 
       <section className="flex flex-col gap-3.5">
         <h2 className="text-[36px] font-bold">Вещи пользователя</h2>
-        {THINGS ? (
-          <AdvertList advertList={THINGS} gridCols={3} />
+        {isLoading && <div>Загрузка...</div>}
+        {error && <div>Ошибка при загрузке вещей</div>}
+        {advertList.length > 0 ? (
+          <AdvertList advertList={advertList} gridCols={3} />
         ) : (
-          <p className="text-[30px]">
+          !isLoading && <p className="text-[30px]">
             В данный момент этот пользователь не сдает вещи в аренду
           </p>
         )}

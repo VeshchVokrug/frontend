@@ -57,7 +57,13 @@ export default function ShareCard({ available, price, endDate }: Props) {
 
       <button
         className="bg-main hover:bg-main-hover active:bg-main-active disabled:bg-disabled ml-auto flex h-13 w-51.25 items-center justify-center rounded-[30px] text-[18px]/[22px] font-bold text-white"
-        disabled={!(share > 0 && share <= available)}
+        disabled={
+          !(
+            share > 0 &&
+            share <= available &&
+            endDate.getTime() >= new Date().getTime()
+          )
+        }
       >
         Приобрести долю
       </button>

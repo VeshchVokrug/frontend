@@ -73,11 +73,6 @@ export default function UserInfo({
         {isCurrentUserProfile && (
           <>
             <div className="flex items-center gap-5">
-              <p className="text-[30px]">Email:</p>
-              <p className="text-[30px]">{user.email || 'Не указано'}</p>
-            </div>
-
-            <div className="flex items-center gap-5">
               <p className="text-[30px]">Телефон:</p>
               <p className="text-[30px]">{user.phone || 'Не указано'}</p>
             </div>

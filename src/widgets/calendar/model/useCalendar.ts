@@ -3,7 +3,8 @@ import { createCalendar } from './createCalendar'
 import { getDatesInRange, isSameDay } from '@/shared/lib/date'
 
 export const useCalendar = (
-  initUnavailableDates: Record<number, number[]> = {}
+  initUnavailableDates: Record<number, number[]> = {},
+  singleRange: boolean = false
 ) => {
   const [currentFullDate, setCurrentFullDate] = useState<Date>(new Date())
   const [selectedDates, setSelectedDates] = useState<Date[]>([])
@@ -21,6 +22,7 @@ export const useCalendar = (
   const applyCurrentRangeRef = useRef<() => void>(() => {})
   const activePointerIdRef = useRef<number | null>(null)
   const lastMoveDate = useRef<Date | null>(null)
+  const singleRangeStartRef = useRef<Date | null>(null)
 
   const currentMonth = currentFullDate.getMonth()
 
@@ -88,7 +90,9 @@ export const useCalendar = (
     const hasUnavailable = range.some((d) => isDateUnavailable(d))
     if (hasUnavailable) return
 
-    if (dragMode.current === 'deselect') {
+    if (singleRange) {
+      setSelectedDates(range)
+    } else if (dragMode.current === 'deselect') {
       setSelectedDates((prev) =>
         prev.filter((d) => !range.some((r) => isSameDay(r, d)))
       )
@@ -134,6 +138,51 @@ export const useCalendar = (
   const handlePointerDown = (date: Date, e: React.PointerEvent) => {
     if (isDateUnavailable(date)) return
 
+    if (singleRange) {
+      if (selectedDates.length > 0) {
+        setSelectedDates([])
+        singleRangeStartRef.current = date
+        setPreviewStart(date)
+        updatePreviewEnd(date)
+        setError('')
+        return
+      }
+      if (!singleRangeStartRef.current) {
+        singleRangeStartRef.current = date
+        setPreviewStart(date)
+        updatePreviewEnd(date)
+        setError('')
+        return
+      }
+
+      let start = singleRangeStartRef.current
+      let end = date
+
+      if (end < start) {
+        const temp = start
+        start = end
+        end = temp
+      }
+
+      const range = getDatesInRange(start, end)
+      const hasUnavailable = range.some((d) => isDateUnavailable(d))
+
+      if (hasUnavailable) {
+        setError('Выбраны недоступные даты')
+        singleRangeStartRef.current = null
+        setPreviewStart(null)
+        updatePreviewEnd(null)
+        return
+      }
+
+      setSelectedDates(range)
+      setPreviewStart(null)
+      updatePreviewEnd(null)
+      singleRangeStartRef.current = null
+      setError('')
+      return
+    }
+
     e.currentTarget.setPointerCapture(e.pointerId)
     activePointerIdRef.current = e.pointerId
 
@@ -150,6 +199,7 @@ export const useCalendar = (
   }
 
   const handlePointerEnter = (date: Date, e: React.PointerEvent) => {
+    if (singleRange) return
     if (!isDragging.current || !dragStart.current) return
     if (
       activePointerIdRef.current !== null &&
@@ -164,6 +214,7 @@ export const useCalendar = (
   }
 
   const handlePointerMove = (date: Date, e: React.PointerEvent) => {
+    if (singleRange) return
     if (!isDragging.current || !dragStart.current) return
     if (
       activePointerIdRef.current !== null &&
@@ -191,6 +242,7 @@ export const useCalendar = (
   }
 
   const handlePointerUp = (date: Date, e: React.PointerEvent) => {
+    if (singleRange) return
     if (!isDragging.current || !dragStart.current) return
     if (
       activePointerIdRef.current !== null &&

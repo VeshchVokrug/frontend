@@ -1,19 +1,34 @@
+'use client'
+
+import { useMemo } from 'react'
+import { useCurrentUser } from '@/entities/user/model/use-current-user'
+import { useUserRentals } from '@/entities/advert'
 import AdvertList from '@/widgets/advert-list'
 
-// TODO: заменить на данные из API
-const ADVERT_LIST = Array.from({ length: 4 }, (_, index) => ({
-  id: String(index + 1),
-  title: 'Название',
-  category: 'electronics',
-  image: '/images/logo.png',
-  price: Math.floor(Math.random() * 5000),
-}))
-
 export default function UserAdverts() {
+  const { data: currentUser } = useCurrentUser()
+  const { data: rentals, isLoading, error } = useUserRentals(currentUser?.id)
+
+  const advertList = useMemo(() => {
+    if (!rentals?.items) return []
+    return rentals.items.map((item) => ({
+      id: item.listingId,
+      title: item.title,
+      category: 'general',
+      image: item.imageUrl ?? '',
+      price: item.pricePerDay,
+    }))
+  }, [rentals])
+
   return (
-    <main>
+    <main className="w-full">
       <h1 className="mb-8 text-[36px] font-bold">Мои вещи</h1>
-      <AdvertList advertList={ADVERT_LIST} />
+      {isLoading && <div>Загрузка...</div>}
+      {error && <div>Ошибка при загрузке вещей</div>}
+      {advertList.length > 0 && <AdvertList advertList={advertList} />}
+      {!isLoading && advertList.length === 0 && !error && (
+        <div>У вас нет опубликованных вещей</div>
+      )}
     </main>
   )
 }

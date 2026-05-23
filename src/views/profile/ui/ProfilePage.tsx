@@ -9,6 +9,7 @@ import {
 } from '@/shared/constants/profile'
 import { formatDateRange } from '@/shared/lib/format-date-range'
 import { usePlural } from '@/shared/lib/pluralize'
+import { tokenStorage } from '@/shared/lib/tokens'
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
@@ -30,6 +31,7 @@ const ORDERS: { name: string; dateStart: Date; dateEnd: Date }[] = [
 const FAVORITES_THING_COUNT = 15
 
 export default function ProfilePage({ user }: { user: User }) {
+  const isAuthorized = !!tokenStorage.getAccessToken()
   const pathname = usePathname()
   const categoriesLabel = usePlural(
     user?.favoriteCategories?.length || 0,
@@ -40,6 +42,14 @@ export default function ProfilePage({ user }: { user: User }) {
     FAVORITES_THING_COUNT || 0,
     FAVORITES_THINGS_PLURAL_FORMS
   )
+
+  if (!isAuthorized) {
+    return (
+      <main className="mx-auto flex w-full max-w-425 flex-col gap-10 pb-10">
+        <div>Вы должны авторизоваться, чтобы посмотреть профиль</div>
+      </main>
+    )
+  }
 
   return (
     <main className="mx-auto flex w-full max-w-425 flex-col gap-10 pb-10">

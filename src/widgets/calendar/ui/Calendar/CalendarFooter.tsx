@@ -1,3 +1,7 @@
+'use client'
+
+import { toast } from 'sonner'
+
 type Props = {
   mode: 'rent' | 'create'
   buttonText: string
@@ -5,6 +9,7 @@ type Props = {
   error: string
   onConfirm: () => void
   onReset: () => void
+  showToast?: boolean
 }
 
 export default function CalendarFooter({
@@ -14,7 +19,15 @@ export default function CalendarFooter({
   buttonText,
   onConfirm,
   onReset,
+  showToast = true,
 }: Props) {
+  const handleConfirm = () => {
+    onConfirm()
+    if (showToast) {
+      toast.success('Даты добавлены')
+    }
+  }
+
   return (
     <>
       <div className="mt-5 flex items-center justify-between">
@@ -30,7 +43,8 @@ export default function CalendarFooter({
         <button
           className="bg-main hover:bg-main-hover disabled:bg-disabled active:bg-main-active ml-auto rounded-4xl px-7.5 py-2.5 text-[18px] font-bold text-white transition"
           disabled={disabled}
-          onClick={onConfirm}
+          onClick={handleConfirm}
+          type="button"
         >
           {buttonText}
         </button>
