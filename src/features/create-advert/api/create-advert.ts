@@ -9,25 +9,26 @@ export const createAdvert = async (
     name,
     description,
     category,
+    subcategory,
     price,
     city,
     busyDates,
     photos,
-    phone,
+    phoneNumber,
     managerId,
     managerName,
   } = advertData
   const { data } = await apiClient.post<CreateAdvertResponse>('/catalog/rentals', {
     title: name,
     description,
-    categorySlug: category,
+    categorySlug: subcategory || category,
     imagesUrls: photos || [],
     city,
     defaultPrice: price,
     busyDates: formatBusyDates(busyDates || []),
     managerId,
     managerName,
-    managerPhone: phone,
+    managerPhone: phoneNumber,
   })
 
   return data

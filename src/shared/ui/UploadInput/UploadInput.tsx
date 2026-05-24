@@ -2,15 +2,18 @@
 
 import { useRef, useState, useCallback } from 'react'
 import Image from 'next/image'
+import { toast } from 'sonner'
+import { getUploadUrl, uploadFile } from '@/shared/api/files'
 
 type Props = {
   multiple?: boolean
   maxFiles?: number
-  onChange?: (files: File[]) => void
-  onRemoveExisting?: () => void
-  initialUrl?: string
+  onChange?: (urls: string[]) => void
+  onRemoveExisting?: (url: string) => Promise<void> | void
+  initialUrls?: string[]
   label?: string
   error?: string
+  folder: 'profile' | 'catalog'
 }
 
 export default function UploadInput({
@@ -18,49 +21,113 @@ export default function UploadInput({
   maxFiles = 5,
   onChange,
   onRemoveExisting,
-  initialUrl,
+  initialUrls = [],
   label,
   error,
+  folder,
 }: Props) {
-  const [existingUrl, setExistingUrl] = useState<string | null>(
-    initialUrl ?? null
-  )
-  const [files, setFiles] = useState<File[]>([])
-  const [previews, setPreviews] = useState<string[]>([])
+  const [existingUrls, setExistingUrls] = useState<string[]>(initialUrls)
+  const [uploadedUrls, setUploadedUrls] = useState<string[]>([])
   const [dragging, setDragging] = useState(false)
+  const [uploading, setUploading] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
 
-  const addFiles = useCallback(
-    (incoming: File[]) => {
-      setFiles((cur) => {
-        const merged = [...cur, ...incoming].slice(0, maxFiles)
-        setPreviews(merged.map((f) => URL.createObjectURL(f)))
-        onChange?.(merged)
-        return merged
-      })
+  const updateChange = useCallback(
+    (existing: string[], uploaded: string[]) => {
+      const merged = [...existing, ...uploaded].slice(0, maxFiles)
+      setTimeout(() => onChange?.(merged), 0)
     },
     [maxFiles, onChange]
   )
 
+  const addFiles = useCallback(
+    async (incoming: File[]) => {
+      setUploading(true)
+      try {
+        const newUrls: string[] = []
+
+        for (const file of incoming) {
+          try {
+            const { uploadUrl, publicUrl } = await getUploadUrl(file.name, folder)
+            await uploadFile(uploadUrl, file)
+            newUrls.push(publicUrl)
+          } catch (error) {
+            const errorMessage = error instanceof Error ? error.message : 'Ошибка загрузки'
+            console.error(`Ошибка загрузки файла ${file.name}:`, error)
+            toast.error(`Ошибка загрузки ${file.name}: ${errorMessage}`)
+          }
+        }
+
+        if (newUrls.length > 0) {
+          setUploadedUrls((cur) => {
+            const merged = [...cur, ...newUrls]
+            updateChange(existingUrls, merged)
+            return merged
+          })
+        }
+      } finally {
+        setUploading(false)
+      }
+    },
+    [folder, existingUrls, updateChange]
+  )
+
   const removeFile = (index: number) => {
-    URL.revokeObjectURL(previews[index])
-    setFiles((cur) => {
+    setUploadedUrls((cur) => {
       const updated = cur.filter((_, i) => i !== index)
-      setPreviews(updated.map((f) => URL.createObjectURL(f)))
-      onChange?.(updated)
+      updateChange(existingUrls, updated)
       return updated
     })
   }
 
-  const removeExisting = () => {
-    setExistingUrl(null)
-    onRemoveExisting?.()
+  const removeExistingUrl = (index: number) => {
+    const urlToRemove = existingUrls[index]
+    toast(
+      <div className="flex flex-col gap-3">
+        <div className="text-[16px] font-semibold">Удалить фото?</div>
+        <div className="flex gap-2">
+          <button
+            onClick={async () => {
+              try {
+                if (onRemoveExisting) {
+                  await onRemoveExisting(urlToRemove)
+                }
+                setExistingUrls((cur) => {
+                  const updated = cur.filter((_, i) => i !== index)
+                  updateChange(updated, uploadedUrls)
+                  return updated
+                })
+                toast.dismiss()
+              } catch (error) {
+                const errorMessage = error instanceof Error ? error.message : 'Ошибка удаления'
+                toast.error(`Ошибка удаления фото: ${errorMessage}`)
+              }
+            }}
+            className="bg-red rounded px-4 py-2 text-[14px] font-semibold text-white hover:bg-red-400 active:bg-red-600"
+          >
+            Удалить
+          </button>
+          <button
+            onClick={() => toast.dismiss()}
+            className="bg-gray rounded px-4 py-2 text-[14px] transition hover:bg-gray-300"
+          >
+            Отмена
+          </button>
+        </div>
+      </div>,
+      {
+        duration: Infinity,
+        position: 'top-center',
+      }
+    )
   }
 
   const onDrop = (e: React.DragEvent) => {
     e.preventDefault()
     setDragging(false)
-    addFiles(Array.from(e.dataTransfer.files))
+    if (!uploading) {
+      addFiles(Array.from(e.dataTransfer.files))
+    }
   }
 
   return (
@@ -94,20 +161,21 @@ export default function UploadInput({
               className="hidden"
             />
 
-            {(existingUrl || files.length > 0) && (
+            {(existingUrls.length > 0 || uploadedUrls.length > 0) && (
               <div className="flex flex-wrap justify-center gap-3">
-                {existingUrl && (
-                  <div className="flex flex-col items-center gap-1">
+                {existingUrls.map((url, i) => (
+                  <div key={`existing-${i}`} className="flex flex-col items-center gap-1">
                     <div className="relative size-20 overflow-hidden rounded-xl">
                       <Image
-                        src={existingUrl}
+                        src={url}
                         alt="Текущее фото"
                         fill
                         className="object-cover"
+                        unoptimized
                       />
                       <button
                         type="button"
-                        onClick={removeExisting}
+                        onClick={() => removeExistingUrl(i)}
                         className="absolute top-1 right-1 flex size-5 items-center justify-center rounded-full bg-black/50 text-white transition hover:bg-black/70"
                       >
                         <svg
@@ -124,17 +192,17 @@ export default function UploadInput({
                       </button>
                     </div>
                     <span className="text-secondary w-20 truncate text-center text-xs">
-                      Текущее фото
+                      Текущее
                     </span>
                   </div>
-                )}
+                ))}
 
-                {files.map((file, i) => (
-                  <div key={i} className="flex flex-col items-center gap-1">
+                {uploadedUrls.map((url, i) => (
+                  <div key={`uploaded-${i}`} className="flex flex-col items-center gap-1">
                     <div className="relative size-20 overflow-hidden rounded-xl">
                       <Image
-                        src={previews[i]}
-                        alt={file.name}
+                        src={url}
+                        alt={`Фото ${i + 1}`}
                         fill
                         className="object-cover"
                         unoptimized
@@ -158,7 +226,7 @@ export default function UploadInput({
                       </button>
                     </div>
                     <span className="text-secondary w-20 truncate text-center text-xs">
-                      {file.name}
+                      Фото {i + 1}
                     </span>
                   </div>
                 ))}
@@ -169,15 +237,19 @@ export default function UploadInput({
               <button
                 type="button"
                 onClick={() => inputRef.current?.click()}
-                className="text-main underline"
+                disabled={uploading || existingUrls.length + uploadedUrls.length >= maxFiles}
+                className="text-main underline disabled:opacity-50"
               >
                 Добавьте
               </button>{' '}
               или перетащите файл
-              {files.length > 0 && (
+              {(existingUrls.length > 0 || uploadedUrls.length > 0) && (
                 <span className="text-secondary ml-2 text-sm">
-                  {files.length} из {maxFiles}
+                  {existingUrls.length + uploadedUrls.length} из {maxFiles}
                 </span>
+              )}
+              {uploading && (
+                <span className="text-secondary ml-2 text-sm">Загрузка...</span>
               )}
             </p>
           </div>

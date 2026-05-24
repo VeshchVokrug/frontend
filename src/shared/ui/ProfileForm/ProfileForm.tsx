@@ -5,17 +5,18 @@ import { ZodFormattedError } from 'zod'
 import Input from '@/shared/ui/Input'
 import UploadInput from '@/shared/ui/UploadInput'
 import { profileFormSchema, ProfileFormData } from './schema'
+import { deleteProfileAvatar } from '@/entities/user/api/delete-avatar'
 
 export type ProfileFormSubmitPayload = {
   data: ProfileFormData
-  avatarFiles: File[]
-  shouldDeleteAvatar: boolean
+  avatarUrl?: string
+  currentAvatarUrls: string[]
 }
 
 type Props = {
   title: string
   initialData?: Partial<ProfileFormData>
-  initialAvatarUrl?: string
+  initialAvatarUrls?: string[]
   onSubmit: (payload: ProfileFormSubmitPayload) => void
   isLoading?: boolean
   serverError?: string | null
@@ -24,7 +25,7 @@ type Props = {
 export default function ProfileForm({
   title,
   initialData,
-  initialAvatarUrl,
+  initialAvatarUrls,
   onSubmit,
   isLoading = false,
   serverError = null,
@@ -37,11 +38,13 @@ export default function ProfileForm({
   const [formData, setFormData] = useState<ProfileFormData>({
     name: initialData?.name ?? '',
     bio: initialData?.bio ?? '',
-    phone: initialData?.phone ?? '',
+    phoneNumber: initialData?.phoneNumber ?? '',
   })
 
-  const [avatarFiles, setAvatarFiles] = useState<File[]>([])
-  const [shouldDeleteAvatar, setShouldDeleteAvatar] = useState(false)
+  const [avatarUrl, setAvatarUrl] = useState<string | undefined>(undefined)
+  const [currentAvatarUrls, setCurrentAvatarUrls] = useState<string[]>(
+    initialAvatarUrls ?? []
+  )
 
   const [errors, setErrors] =
     useState<ZodFormattedError<ProfileFormData> | null>(null)
@@ -77,8 +80,8 @@ export default function ProfileForm({
 
     onSubmit({
       data: validationResult.data,
-      avatarFiles,
-      shouldDeleteAvatar,
+      avatarUrl,
+      currentAvatarUrls,
     })
   }
 
@@ -127,16 +130,16 @@ export default function ProfileForm({
               type="tel"
               label="Телефон"
               placeholder="Ваш номер в формате +7( )"
-              name="phone"
-              value={formData.phone}
+              name="phoneNumber"
+              value={formData.phoneNumber}
               onChange={(evt) =>
-                setFormData((prev) => ({ ...prev, phone: evt.target.value }))
+                setFormData((prev) => ({ ...prev, phoneNumber: evt.target.value }))
               }
               required={false}
               layout="horizontal"
               size="lg"
               variant="filled"
-              error={errors?.phone?._errors.join(', ')}
+              error={errors?.phoneNumber?._errors.join(', ')}
             />
           </fieldset>
 
@@ -160,9 +163,15 @@ export default function ProfileForm({
 
           <UploadInput
             label="Фото профиля"
-            initialUrl={initialAvatarUrl}
-            onChange={(newFiles) => setAvatarFiles(newFiles)}
-            onRemoveExisting={() => setShouldDeleteAvatar(true)}
+            folder="profile"
+            initialUrls={initialAvatarUrls}
+            onChange={(urls) => {
+              setCurrentAvatarUrls(urls)
+              setAvatarUrl(urls[0])
+            }}
+            onRemoveExisting={deleteProfileAvatar}
+            multiple={false}
+            maxFiles={1}
           />
         </div>
 

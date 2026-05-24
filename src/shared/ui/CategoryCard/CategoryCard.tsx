@@ -67,6 +67,7 @@ export default function CategoryCard({
         width={0}
         height={0}
         sizes="100vw"
+        unoptimized
       />
     </Link>
   )

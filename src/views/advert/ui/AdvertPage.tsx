@@ -6,13 +6,14 @@ import {
   AdvertOwnerInfo,
   AdvertPhotoSlider,
   AdvertСharacteristics,
-  useRentalDetails,
-  useCreateBooking,
+  useAdvertDetails,
+  useCreateOrder,
   type AvailabilitySlot,
 } from '@/entities/advert'
 import { useCurrentUser } from '@/entities/user/model/use-current-user'
 import { Calendar } from '@/widgets/calendar'
 import { toast } from 'sonner'
+import { CATEGORIES } from '@/shared/constants/categories'
 
 import Header from '@/widgets/header'
 
@@ -21,40 +22,73 @@ type Props = {
 }
 
 export default function AdvertPage({ id }: Props) {
-  const { data: rentalDetails, isLoading, error } = useRentalDetails(id)
+  const { data: advertDetails, isLoading, error } = useAdvertDetails(id)
   const { data: currentUser } = useCurrentUser()
-  const { mutate: createBooking } = useCreateBooking()
+  const { mutate: createOrder } = useCreateOrder()
 
   const photos = useMemo(() => {
-    if (!rentalDetails?.imagesUrls) return []
-    return rentalDetails.imagesUrls.map((url: string, idx: number) => ({
+    if (!advertDetails?.imagesUrls) return []
+    return advertDetails.imagesUrls.map((url: string, idx: number) => ({
       id: idx + 1,
       img: url,
     }))
-  }, [rentalDetails])
+  }, [advertDetails])
 
   const unavailableDates = useMemo(() => {
-    if (!rentalDetails?.availabilitySlots) return {}
+    if (!advertDetails?.availabilitySlots) return {}
 
     const datesByMonth: Record<number, number[]> = {}
+    const availableByMonth: Record<number, Set<number>> = {}
+    const monthsInSlots = new Set<number>()
 
-    rentalDetails.availabilitySlots.forEach((slot: AvailabilitySlot) => {
-      if (!slot.isAvailable && slot.date) {
-        const month = slot.date.month - 1
-        const day = slot.date.day
+    advertDetails.availabilitySlots.forEach((slot: AvailabilitySlot) => {
+      if (slot.dateDto) {
+        const month = slot.dateDto.month - 1
+        const day = slot.dateDto.day
 
-        if (!datesByMonth[month]) {
-          datesByMonth[month] = []
+        monthsInSlots.add(month)
+
+        if (!availableByMonth[month]) {
+          availableByMonth[month] = new Set()
         }
-        datesByMonth[month].push(day)
+
+        if (slot.isAvailable) {
+          availableByMonth[month].add(day)
+        }
       }
     })
 
+    const year = advertDetails.availabilitySlots?.[0]?.dateDto?.year || new Date().getFullYear()
+
+    // For each month in the slots, mark all days as unavailable except those that are explicitly available
+    Object.entries(availableByMonth).forEach(([monthStr, availableDays]) => {
+      const month = parseInt(monthStr)
+      const allDays = []
+      const daysInMonth = new Date(year, month + 1, 0).getDate()
+
+      for (let day = 1; day <= daysInMonth; day++) {
+        if (!availableDays.has(day)) {
+          allDays.push(day)
+        }
+      }
+
+      datesByMonth[month] = allDays
+    })
+
+    // For months without any slots, mark all days as unavailable
+    for (let month = 0; month < 12; month++) {
+      if (!monthsInSlots.has(month) && !datesByMonth[month]) {
+        const daysInMonth = new Date(year, month + 1, 0).getDate()
+        const allDays = Array.from({ length: daysInMonth }, (_, i) => i + 1)
+        datesByMonth[month] = allDays
+      }
+    }
+
     return datesByMonth
-  }, [rentalDetails])
+  }, [advertDetails])
 
   const handleSelectDates = (dates: string[]) => {
-    if (!currentUser || !rentalDetails) {
+    if (!currentUser || !advertDetails) {
       toast.error('Войдите в аккаунт перед бронированием')
       return
     }
@@ -75,39 +109,50 @@ export default function AdvertPage({ id }: Props) {
     const endMonth = endDate.getMonth() + 1
     const endDay = endDate.getDate()
 
-    const daysCount = Math.ceil((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24)) + 1
-    const expectedPrice = daysCount * rentalDetails.defaultPrice
+    const daysCount =
+      Math.ceil(
+        (endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24)
+      ) + 1
+    const expectedPrice = daysCount * advertDetails.defaultPrice
 
     const startDateStr = `${startYear}-${String(startMonth).padStart(2, '0')}-${String(startDay).padStart(2, '0')}`
     const endDateStr = `${endYear}-${String(endMonth).padStart(2, '0')}-${String(endDay).padStart(2, '0')}`
 
     toast(
       <div className="flex flex-col gap-3">
-        <div className="text-[16px] font-semibold">Подтвердить бронирование?</div>
+        <div className="text-[16px] font-semibold">
+          Подтвердить бронирование?
+        </div>
         <div className="text-[14px] text-gray-600">
-          <p>Даты: {startDateStr} - {endDateStr}</p>
+          <p>
+            Даты: {startDateStr} - {endDateStr}
+          </p>
           <p>Количество дней: {daysCount}</p>
           <p className="font-semibold">Ожидаемая цена: {expectedPrice} ₽</p>
         </div>
         <div className="flex gap-2">
           <button
             onClick={() => {
-              createBooking({
+              createOrder({
                 listingId: id,
-                ownerId: rentalDetails.ownerId,
-                startDate: { year: startYear, month: startMonth, day: startDay },
+                ownerId: advertDetails.ownerId,
+                startDate: {
+                  year: startYear,
+                  month: startMonth,
+                  day: startDay,
+                },
                 endDate: { year: endYear, month: endMonth, day: endDay },
                 expectedPrice,
               })
               toast.dismiss()
             }}
-            className="bg-main hover:bg-main-hover px-4 py-2 rounded text-white text-[14px] font-semibold"
+            className="bg-main hover:bg-main-hover rounded px-4 py-2 text-[14px] font-semibold text-white"
           >
             Забронировать
           </button>
           <button
             onClick={() => toast.dismiss()}
-            className="bg-gray px-4 py-2 rounded text-[14px]"
+            className="bg-gray rounded px-4 py-2 text-[14px] transition hover:bg-gray-300"
           >
             Отмена
           </button>
@@ -131,7 +176,7 @@ export default function AdvertPage({ id }: Props) {
     )
   }
 
-  if (error || !rentalDetails) {
+  if (error || !advertDetails) {
     return (
       <>
         <Header />
@@ -150,14 +195,30 @@ export default function AdvertPage({ id }: Props) {
           <div className="flex w-full flex-col gap-15">
             <AdvertPhotoSlider photos={photos} />
             <AdvertСharacteristics
-              category={rentalDetails.categorySlug}
-              description={rentalDetails.description}
+              category={
+                (() => {
+                  const mainCat = CATEGORIES.find((cat) => cat.slug === advertDetails.categorySlug)
+                  if (mainCat) return mainCat.title
+
+                  const parentCat = CATEGORIES.find((cat) =>
+                    cat.subcategories?.some((sub) => sub.value === advertDetails.categorySlug)
+                  )
+                  const subCat = parentCat?.subcategories?.find((sub) => sub.value === advertDetails.categorySlug)
+
+                  if (parentCat && subCat) {
+                    return `${parentCat.title} - ${subCat.displayName}`
+                  }
+
+                  return advertDetails.categorySlug
+                })()
+              }
+              description={advertDetails.description}
             />
           </div>
           <div className="flex w-full flex-col gap-15">
             <AdvertHeader
-              title={rentalDetails.title}
-              price={rentalDetails.defaultPrice}
+              title={advertDetails.title}
+              price={advertDetails.defaultPrice}
             />
             <Calendar
               unavailableDates={unavailableDates}
@@ -167,10 +228,12 @@ export default function AdvertPage({ id }: Props) {
               autoReset={true}
             />
             <AdvertOwnerInfo
-              name={rentalDetails.ownerName}
+              name={advertDetails.ownerName}
               status="Частное лицо"
-              rating={rentalDetails.ownerRating}
+              rating={advertDetails.ownerRating}
               reviewsCount={0}
+              ownerId={advertDetails.ownerId}
+              ownerPhone={advertDetails.ownerPhone}
             />
           </div>
         </div>

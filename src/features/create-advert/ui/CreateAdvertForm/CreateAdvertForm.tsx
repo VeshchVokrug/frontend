@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import { useRouter } from 'next/navigation'
 import { ZodFormattedError } from 'zod'
 import { toast } from 'sonner'
@@ -9,10 +9,9 @@ import AdvertSelect from '../../../../shared/ui/Select'
 import UploadInput from '@/shared/ui/UploadInput'
 import { createAdvertSchema, CreateAdvertInputData } from '../../model/schema'
 import { useCurrentUser } from '@/entities/user/model/use-current-user'
-
-import { CATEGORIES } from '@/shared/constants/categories'
 import { useCreateAdvert } from '../../model/use-create-advert'
 import Input from '@/shared/ui/Input'
+import { CATEGORIES } from '@/shared/constants/categories'
 
 export default function CreateAdvertForm() {
   const { mutate: createAdvert } = useCreateAdvert()
@@ -26,7 +25,7 @@ export default function CreateAdvertForm() {
     subcategory: '',
     price: 0,
     city: '',
-    phone: '',
+    phoneNumber: currentUser?.phoneNumber || '',
     busyDates: [],
     photos: [],
   })
@@ -38,6 +37,20 @@ export default function CreateAdvertForm() {
     key: K,
     value: CreateAdvertInputData[K]
   ) => setAdvertData((prev) => ({ ...prev, [key]: value }))
+
+  const mainCategories = useMemo(() => {
+    return CATEGORIES.map(({ slug, title }) => ({
+      value: slug,
+      displayName: title,
+    }))
+  }, [])
+
+  const subcategories = useMemo(() => {
+    const selectedCategory = CATEGORIES.find(
+      (cat) => cat.slug === advertData.category
+    )
+    return selectedCategory?.subcategories || []
+  }, [advertData.category])
 
   const handleSubmit = (evt: React.FormEvent) => {
     evt.preventDefault()
@@ -105,9 +118,9 @@ export default function CreateAdvertForm() {
               label="Категория вещи"
               value={advertData.category}
               placeholder="Выберите категорию вещи"
-              options={CATEGORIES.map(({ title, slug }) => ({
-                text: title,
-                value: slug,
+              options={mainCategories.map(({ value, displayName }) => ({
+                text: displayName,
+                value,
               }))}
               onChange={(val) => {
                 set('category', val)
@@ -116,16 +129,16 @@ export default function CreateAdvertForm() {
               error={errors?.category?._errors.join(', ')}
             />
 
-            {advertData.category && (
+            {advertData.category && subcategories.length > 0 && (
               <AdvertSelect
                 name="subcategory"
                 label="Подкатегория вещи"
                 value={advertData.subcategory || ''}
                 placeholder="Выберите подкатегорию вещи"
-                options={[
-                  { text: 'Подкатегория 1', value: 'subcategory1' },
-                  { text: 'Подкатегория 2', value: 'subcategory2' },
-                ]}
+                options={subcategories.map(({ value, displayName }) => ({
+                  text: displayName,
+                  value,
+                }))}
                 onChange={(val) => set('subcategory', val)}
                 error={errors?.subcategory?._errors.join(', ')}
               />
@@ -167,10 +180,10 @@ export default function CreateAdvertForm() {
                 type="tel"
                 label="Телефон"
                 placeholder="Ваш номер в формате +7( )"
-                name="phone"
-                value={advertData.phone}
-                onChange={(e) => set('phone', e.target.value)}
-                error={errors?.phone?._errors.join(', ')}
+                name="phoneNumber"
+                value={advertData.phoneNumber}
+                onChange={(e) => set('phoneNumber', e.target.value)}
+                error={errors?.phoneNumber?._errors.join(', ')}
                 required={false}
                 layout="horizontal"
                 size="lg"
@@ -185,6 +198,7 @@ export default function CreateAdvertForm() {
                   buttonText="Добавить дату"
                   mode="create"
                   onSelect={(dates) => set('busyDates', dates)}
+                  autoReset={false}
                 />
               </div>
               {errors?.busyDates?._errors.length && (
@@ -197,12 +211,8 @@ export default function CreateAdvertForm() {
 
           <UploadInput
             label="Фото вещи"
-            onChange={(files) =>
-              set(
-                'photos',
-                files.map((f) => f.name)
-              )
-            }
+            folder="catalog"
+            onChange={(urls) => set('photos', urls)}
             error={errors?.photos?._errors.join(', ')}
           />
         </div>
@@ -211,7 +221,7 @@ export default function CreateAdvertForm() {
           type="submit"
           className="bg-main hover:bg-main-hover disabled:bg-disabled active:bg-main-active mt-auto mb-14 ml-auto h-fit rounded-4xl px-7.5 py-5 text-[30px]/[36px] font-bold text-nowrap text-white transition"
         >
-          Предпросмотр карточки
+          Сохранить
         </button>
       </div>
     </form>

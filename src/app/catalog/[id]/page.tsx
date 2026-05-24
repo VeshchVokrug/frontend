@@ -1,5 +1,5 @@
 import { HydrationBoundary, QueryClient, dehydrate } from '@tanstack/react-query'
-import { prefetchRentalDetails } from '@/entities/advert/api/prefetch-rental-details'
+import { prefetchAdvertDetails } from '@/entities/advert/api/prefetch-advert-details'
 import AdvertPage from '@/views/advert'
 
 export default async function page({
@@ -18,7 +18,7 @@ export default async function page({
   })
 
   try {
-    await prefetchRentalDetails(serverQueryClient, id)
+    await prefetchAdvertDetails(serverQueryClient, id)
   } catch (error) {
     console.error('Failed to prefetch rental details:', error)
   }

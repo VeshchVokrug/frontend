@@ -1,14 +1,14 @@
 import { apiClient } from '@/shared/api/api-client'
 import {
-  RentalsQueryParams,
-  rentalsResponseSchema,
-  RentalsResponse,
+  AdvertsQueryParams,
+  advertsResponseSchema,
+  AdvertsResponse,
 } from '../model/schema'
 
-export const getRentals = async (
-  params: RentalsQueryParams
-): Promise<RentalsResponse> => {
-  const { data } = await apiClient.get<RentalsResponse>('/catalog/rentals', {
+export const getAdverts = async (
+  params: AdvertsQueryParams
+): Promise<AdvertsResponse> => {
+  const { data } = await apiClient.get<AdvertsResponse>('/catalog/rentals', {
     params: {
       searchTerm: params.searchTerm,
       city: params.city,
@@ -27,7 +27,7 @@ export const getRentals = async (
     },
   })
 
-  const result = rentalsResponseSchema.safeParse(data)
+  const result = advertsResponseSchema.safeParse(data)
 
   if (!result.success) {
     console.error('Ошибка валидации списка объявлений:', result.error.issues)

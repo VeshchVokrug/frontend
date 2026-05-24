@@ -7,32 +7,18 @@ import {
   CATEGORIES_PLURAL_FORMS,
   FAVORITES_THINGS_PLURAL_FORMS,
 } from '@/shared/constants/profile'
-import { formatDateRange } from '@/shared/lib/format-date-range'
 import { usePlural } from '@/shared/lib/pluralize'
 import { tokenStorage } from '@/shared/lib/tokens'
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 
-// TODO: Заменить на получение данных из API
-const ORDERS: { name: string; dateStart: Date; dateEnd: Date }[] = [
-  {
-    name: 'Велосипед',
-    dateStart: new Date(2026, 4, 4),
-    dateEnd: new Date(2026, 4, 10),
-  },
-  {
-    name: 'Дрель',
-    dateStart: new Date(2026, 3, 29),
-    dateEnd: new Date(2026, 4, 7),
-  },
-]
-
 const FAVORITES_THING_COUNT = 15
 
 export default function ProfilePage({ user }: { user: User }) {
   const isAuthorized = !!tokenStorage.getAccessToken()
   const pathname = usePathname()
+
   const categoriesLabel = usePlural(
     user?.favoriteCategories?.length || 0,
     CATEGORIES_PLURAL_FORMS
@@ -88,20 +74,7 @@ export default function ProfilePage({ user }: { user: User }) {
           className="bg-gray shadow-shadow flex-1 flex-col gap-6 rounded-[30px] px-11 py-10.5 shadow-md/40"
         >
           <h2 className="mb-7 text-[36px] font-bold">Актуальные заказы</h2>
-          {ORDERS.length ? (
-            <div className="flex flex-col gap-5">
-              {ORDERS.map(({ dateStart, dateEnd }) => (
-                <div key={dateStart.toISOString()} className="flex gap-5">
-                  <p className="text-[30px]">Аренда: </p>
-                  <p className="text-[30px]">
-                    {formatDateRange(dateStart, dateEnd)}
-                  </p>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <p className="text-[30px]">Нет актуальных заявок</p>
-          )}
+          <p className="text-[30px]">Нажмите, чтобы узнать</p>
         </Link>
 
         <Link

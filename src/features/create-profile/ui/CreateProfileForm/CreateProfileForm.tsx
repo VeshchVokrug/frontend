@@ -10,8 +10,8 @@ export default function CreateProfileForm() {
   const { mutate, isPending, error } = useCreateProifle()
   const router = useRouter()
 
-  const handleSubmit = ({ data }: ProfileFormSubmitPayload) => {
-    mutate({ ...data }, { onSuccess: () => router.push('/profile') })
+  const handleSubmit = ({ data, avatarUrl }: ProfileFormSubmitPayload) => {
+    mutate({ ...data, avatarUrl }, { onSuccess: () => router.push('/profile') })
   }
 
   return (

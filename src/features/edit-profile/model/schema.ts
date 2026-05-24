@@ -10,7 +10,8 @@ export const editProfileSchema = z.object({
     .max(300, 'Информация о себе должна содержать не более 300 символов')
     .optional(),
   avatarPath: z.string().optional(),
-  phone: z.string().optional(),
+  avatarUrl: z.string().optional(),
+  phoneNumber: z.string().optional(),
 })
 
 export type editProfileInputData = z.infer<typeof editProfileSchema>

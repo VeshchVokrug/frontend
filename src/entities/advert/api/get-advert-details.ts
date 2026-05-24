@@ -1,14 +1,14 @@
 import { apiClient } from '@/shared/api/api-client'
-import { RentalDetails, rentalDetailsSchema } from '../model/schema'
+import { AdvertDetails, advertDetailsSchema } from '../model/schema'
 
-export const getRentalDetails = async (
+export const getAdvertDetails = async (
   listingId: string
-): Promise<RentalDetails> => {
-  const { data } = await apiClient.get<RentalDetails>(
+): Promise<AdvertDetails> => {
+  const { data } = await apiClient.get<AdvertDetails>(
     `/catalog/rentals/${listingId}`
   )
 
-  const result = rentalDetailsSchema.safeParse(data)
+  const result = advertDetailsSchema.safeParse(data)
 
   if (!result.success) {
     console.error(

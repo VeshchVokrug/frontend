@@ -1,9 +1,10 @@
 'use client'
 
 import { useMemo, useState } from 'react'
-import { CATEGORIES } from '@/shared/constants/categories'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { resolveDate } from '@/shared/lib/date'
-import { useRentals } from '@/entities/advert'
+import { useAdverts } from '@/entities/advert'
+import { CATEGORIES } from '@/shared/constants/categories'
 import AdvertList from '@/widgets/advert-list'
 import CategoryFilter from '@/widgets/category-filter'
 import Header from '@/widgets/header'
@@ -20,8 +21,42 @@ type CategoryPageProps = {
 
 export default function CategoryPage({ filterParams }: CategoryPageProps) {
   const [currentPage, setCurrentPage] = useState(1)
-  const categorySlug = filterParams.categorySlug || 'electronics'
-  const categoryData = CATEGORIES.find(({ slug }) => slug === categorySlug)!
+  const router = useRouter()
+  const searchParams = useSearchParams()
+  const categorySlug = filterParams.categorySlug || 'construction'
+
+  const categoryData = useMemo(() => {
+    return CATEGORIES.find(({ slug }) => slug === categorySlug) ?? null
+  }, [categorySlug])
+
+  const defaultSubcategory = useMemo(() => {
+    return categoryData?.subcategories?.[0]?.value
+  }, [categoryData])
+
+  const subcategoryMap = useMemo(() => {
+    if (!categoryData?.subcategories) return new Map()
+    return new Map(
+      categoryData.subcategories.map((sub) => [sub.displayName, sub.value])
+    )
+  }, [categoryData])
+
+  const effectiveSubcategory = useMemo(() => {
+    return filterParams.subcategory || defaultSubcategory || ''
+  }, [filterParams.subcategory, defaultSubcategory])
+
+  const handleSubcategorySelect = (displayName: string) => {
+    const params = new URLSearchParams(searchParams.toString())
+
+    if (displayName === '') {
+      params.delete('subcategory')
+    } else {
+      const value = subcategoryMap.get(displayName)
+      if (!value) return
+      params.set('subcategory', value)
+    }
+
+    router.push(`?${params.toString()}`)
+  }
 
   const queryParams = useMemo(() => {
     const params: Record<string, string | number | undefined> = {
@@ -29,12 +64,7 @@ export default function CategoryPage({ filterParams }: CategoryPageProps) {
       pageSize: 9,
     }
 
-    if (filterParams.categorySlug) {
-      params.categorySlug = filterParams.categorySlug
-    }
-    if (filterParams.subcategory) {
-      params.subcategory = filterParams.subcategory
-    }
+    params.categorySlug = effectiveSubcategory
     if (filterParams.priceMin) {
       params.minPrice = Number(filterParams.priceMin)
     }
@@ -51,9 +81,9 @@ export default function CategoryPage({ filterParams }: CategoryPageProps) {
     }
 
     return params
-  }, [filterParams, currentPage])
+  }, [effectiveSubcategory, filterParams, currentPage])
 
-  const { data, isLoading, error } = useRentals(queryParams)
+  const { data, isLoading, error } = useAdverts(queryParams)
 
   const advertList = useMemo(() => {
     if (!data?.items) return []
@@ -61,20 +91,38 @@ export default function CategoryPage({ filterParams }: CategoryPageProps) {
       id: item.listingId,
       title: item.title,
       category: 'electronics',
-      image: item.imageUrl ?? '',
+      image: item.imageUrl ?? '/images/logo.png',
       price: item.pricePerDay,
       rating: item.ownerRating,
     }))
   }, [data])
 
+  if (!categoryData) {
+    return (
+      <>
+        <Header />
+        <main className="w-full max-w-425">
+          <div>Категория не найдена</div>
+        </main>
+      </>
+    )
+  }
+
   return (
     <>
       <Header />
       <main className="flex w-full max-w-425 gap-15">
-        <CategoryFilter
-          categoryData={categoryData}
-          filterParams={filterParams}
-        />
+        {categoryData && (
+          <CategoryFilter
+            categoryData={{
+              ...categoryData,
+              subcategories: categoryData.subcategories?.map((sub) => sub.displayName),
+            }}
+            filterParams={{ ...filterParams, subcategory: effectiveSubcategory }}
+            onSubcategorySelect={handleSubcategorySelect}
+            subcategoryData={categoryData.subcategories}
+          />
+        )}
         <div className="w-full">
           {isLoading && <div>Загрузка...</div>}
           {error && <div>Ошибка при загрузке данных</div>}

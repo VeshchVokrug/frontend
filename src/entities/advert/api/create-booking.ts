@@ -1,15 +1,15 @@
 import { apiClient } from '@/shared/api/api-client'
-import { CreateBookingPayload, BookingResponse, bookingResponseSchema } from '../model/schema'
+import { CreateOrderPayload, OrderResponse, orderResponseSchema } from '../model/schema'
 
-export const createBooking = async (
-  payload: CreateBookingPayload
-): Promise<BookingResponse> => {
-  const { data } = await apiClient.post<BookingResponse>('/rental/bookings', payload)
+export const createOrder = async (
+  payload: CreateOrderPayload
+): Promise<OrderResponse> => {
+  const { data } = await apiClient.post<OrderResponse>('/rental/bookings', payload)
 
-  const result = bookingResponseSchema.safeParse(data)
+  const result = orderResponseSchema.safeParse(data)
 
   if (!result.success) {
-    console.error('Ошибка валидации ответа при создании бронирования:', result.error.issues)
+    console.error('Ошибка валидации ответа при создании заказа:', result.error.issues)
     throw result.error
   }
 

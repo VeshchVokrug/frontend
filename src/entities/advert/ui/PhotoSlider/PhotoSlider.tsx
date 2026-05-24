@@ -54,6 +54,7 @@ export default function AdvertPhotoSlider({ photos }: Props) {
               alt={`Изображение ${id}`}
               fill
               className="object-contain"
+              unoptimized
             />
           </button>
         ))}
@@ -77,6 +78,7 @@ export default function AdvertPhotoSlider({ photos }: Props) {
           alt={`Изображение ${mainPhoto?.id}`}
           fill
           className="object-contain"
+          unoptimized
         />
       </div>
     </section>

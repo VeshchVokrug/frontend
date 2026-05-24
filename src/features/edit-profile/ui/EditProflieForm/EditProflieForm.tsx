@@ -10,13 +10,22 @@ import { useCurrentUser } from '@/entities/user/model/use-current-user'
 import { queryClient } from '@/app/providers/query-provider'
 
 export function EditProfileForm() {
-  const { data: currentUser } = useCurrentUser()
+  const { data: currentUser, isLoading } = useCurrentUser()
   const { mutate, isPending, error } = useEditProifle()
   const router = useRouter()
 
-  const handleSubmit = ({ data }: ProfileFormSubmitPayload) => {
+  if (isLoading) {
+    return <div>Загрузка...</div>
+  }
+
+  if (!currentUser) {
+    return <div>Ошибка загрузки профиля</div>
+  }
+
+  const handleSubmit = ({ data, avatarUrl, currentAvatarUrls }: ProfileFormSubmitPayload) => {
+    const finalAvatarUrl = avatarUrl ?? (currentAvatarUrls.length > 0 ? currentAvatarUrls[0] : '')
     mutate(
-      { ...data },
+      { ...data, avatarUrl: finalAvatarUrl },
       {
         onSuccess: () => {
           router.push('/profile')
@@ -30,10 +39,11 @@ export function EditProfileForm() {
     <ProfileForm
       title="Редактирование профиля"
       initialData={{
-        name: currentUser?.name,
-        bio: currentUser?.bio,
-        phone: currentUser?.phone,
+        name: currentUser.name,
+        bio: currentUser.bio,
+        phoneNumber: currentUser.phoneNumber,
       }}
+      initialAvatarUrls={currentUser.avatarUrl ? [currentUser.avatarUrl] : undefined}
       onSubmit={handleSubmit}
       isLoading={isPending}
       serverError={error?.message}

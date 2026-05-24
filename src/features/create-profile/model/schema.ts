@@ -9,8 +9,9 @@ export const createProfileSchema = z.object({
     .string()
     .max(300, 'Информация о себе должна содержать не более 300 символов')
     .optional(),
+  avatarUrl: z.string().optional(),
   favoriteCategories: z.array(z.string()).optional(),
-  phone: z.string().optional(),
+  phoneNumber: z.string().optional(),
 })
 
 export type createProfileInputData = z.infer<typeof createProfileSchema>

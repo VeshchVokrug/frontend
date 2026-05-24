@@ -1,4 +1,5 @@
 import { CategoryCardProps } from '@/shared/ui/CategoryCard/type'
+import { Subcategory } from '@/shared/constants/categories'
 
 import SubcategoryFilter from './SubcategoryFilter'
 import PriceFilter from './PriceFilter'
@@ -14,11 +15,15 @@ type CategoryFilterProps = {
     priceMin?: string
     priceMax?: string
   }
+  onSubcategorySelect?: (subcategory: string) => void
+  subcategoryData?: Subcategory[]
 }
 
 export default function CategoryFilter({
   categoryData,
   filterParams,
+  onSubcategorySelect,
+  subcategoryData,
 }: CategoryFilterProps) {
   const { handleSubcategoryClick, handlePriceChange, handleDateChange } =
     useCategoryFilter()
@@ -28,7 +33,8 @@ export default function CategoryFilter({
       <SubcategoryFilter
         categoryData={categoryData}
         subcategory={filterParams.subcategory ?? ''}
-        onSelect={handleSubcategoryClick}
+        subcategoryData={subcategoryData}
+        onSelect={onSubcategorySelect || handleSubcategoryClick}
       />
 
       <PriceFilter

@@ -28,7 +28,7 @@ export default function UserInfo({
       <div
         className={`relative flex gap-5 ${isVertical ? 'mb-5 flex-col justify-center' : 'mb-9.5 items-center'}`}
       >
-        <div className="aspect-square w-fit rounded-[20px] bg-white">
+        <div className="flex aspect-square max-h-37.5 w-fit max-w-37.5 items-center overflow-hidden rounded-[20px] bg-white">
           <Image
             src={
               user.avatarUrl
@@ -38,7 +38,8 @@ export default function UserInfo({
             alt={`Фотография пользователя ${user.name}`}
             width={imageSize}
             height={imageSize}
-            className="object-cover"
+            className="h-full w-full object-cover"
+            unoptimized
           />
         </div>
         <p className="text-[36px] font-bold">{user.name}</p>
@@ -74,7 +75,7 @@ export default function UserInfo({
           <>
             <div className="flex items-center gap-5">
               <p className="text-[30px]">Телефон:</p>
-              <p className="text-[30px]">{user.phone || 'Не указано'}</p>
+              <p className="text-[30px]">{user.phoneNumber || 'Не указано'}</p>
             </div>
           </>
         )}

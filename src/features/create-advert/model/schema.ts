@@ -9,13 +9,13 @@ export const createAdvertSchema = z.object({
     .string()
     .max(300, 'Описание должно содержать не более 300 символов'),
   category: z.string().min(1, 'Выберите категорию'),
-  subcategory: z.string().optional(),
+  subcategory: z.string().min(1, 'Выберите подкатегорию'),
   price: z.number().positive('Цена должна быть положительным числом'),
   city: z
     .string()
     .min(2, 'Город должен содержать не менее 2 символов')
     .max(50, 'Город должен содержать не более 50 символов'),
-  phone: z
+  phoneNumber: z
     .string()
     .min(10, 'Номер телефона должен содержать не менее 10 цифр')
     .optional()

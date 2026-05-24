@@ -16,7 +16,7 @@ export const advertPhotosSchema = z.array(
 )
 
 export const availabilitySlotSchema = z.object({
-  date: z
+  dateDto: z
     .object({
       year: z.number(),
       month: z.number(),
@@ -31,7 +31,7 @@ export const availabilitySlotSchema = z.object({
   bookingId: z.string().optional(),
 })
 
-export const rentalDetailsSchema = z.object({
+export const advertDetailsSchema = z.object({
   id: z.string(),
   version: z.number(),
   titleSlug: z.string(),
@@ -52,7 +52,7 @@ export const rentalDetailsSchema = z.object({
   availabilitySlots: z.array(availabilitySlotSchema),
 })
 
-export const rentalItemSchema = z.object({
+export const advertItemSchema = z.object({
   listingId: z.string(),
   title: z.string(),
   titleSlug: z.string(),
@@ -61,19 +61,19 @@ export const rentalItemSchema = z.object({
   ownerRating: z.number().optional(),
 })
 
-export const rentalsResponseSchema = z.object({
-  items: z.array(rentalItemSchema),
+export const advertsResponseSchema = z.object({
+  items: z.array(advertItemSchema),
   totalCount: z.number(),
   pageNumber: z.number(),
   pageSize: z.number(),
   city: z.string().optional(),
 })
 
-export const userRentalsResponseSchema = z.object({
-  items: z.array(rentalItemSchema),
+export const userAdvertsResponseSchema = z.object({
+  items: z.array(advertItemSchema),
 })
 
-export interface RentalsQueryParams {
+export interface AdvertsQueryParams {
   searchTerm?: string
   city?: string
   categorySlug?: string
@@ -96,7 +96,7 @@ const dateSchema = z.object({
   day: z.number(),
 })
 
-export const createBookingPayloadSchema = z.object({
+export const createOrderPayloadSchema = z.object({
   listingId: z.string(),
   ownerId: z.string(),
   startDate: dateSchema,
@@ -104,7 +104,7 @@ export const createBookingPayloadSchema = z.object({
   expectedPrice: z.number(),
 })
 
-export const bookingResponseSchema = z.object({
+export const orderResponseSchema = z.object({
   bookingId: z.string(),
   hasBookingId: z.boolean().optional(),
   cancellationReason: z.string().optional(),
@@ -114,9 +114,9 @@ export const bookingResponseSchema = z.object({
 export type Advert = z.infer<typeof advertSchema>
 export type AdvertPhotos = z.infer<typeof advertPhotosSchema>
 export type AvailabilitySlot = z.infer<typeof availabilitySlotSchema>
-export type RentalDetails = z.infer<typeof rentalDetailsSchema>
-export type RentalItem = z.infer<typeof rentalItemSchema>
-export type RentalsResponse = z.infer<typeof rentalsResponseSchema>
-export type UserRentalsResponse = z.infer<typeof userRentalsResponseSchema>
-export type CreateBookingPayload = z.infer<typeof createBookingPayloadSchema>
-export type BookingResponse = z.infer<typeof bookingResponseSchema>
+export type AdvertDetails = z.infer<typeof advertDetailsSchema>
+export type AdvertItem = z.infer<typeof advertItemSchema>
+export type AdvertsResponse = z.infer<typeof advertsResponseSchema>
+export type UserAdvertsResponse = z.infer<typeof userAdvertsResponseSchema>
+export type CreateOrderPayload = z.infer<typeof createOrderPayloadSchema>
+export type OrderResponse = z.infer<typeof orderResponseSchema>

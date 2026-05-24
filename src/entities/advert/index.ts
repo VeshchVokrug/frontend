@@ -5,18 +5,19 @@ export {
   AdvertСharacteristics,
   AdvertOwnerInfo,
 } from './ui'
-export { useRentalDetails } from './model/use-rental-details'
-export { useRentals } from './model/use-rentals'
-export { useUserRentals } from './model/use-user-rentals'
-export { useCreateBooking } from './model/use-create-booking'
+export { useAdvertDetails } from './model/use-advert-details'
+export { useAdverts } from './model/use-adverts'
+export { useUserAdverts } from './model/use-user-adverts'
+export { useCreateOrder } from './model/use-create-booking'
+export { useDeleteAdvert } from './model/use-delete-advert'
 export type {
   Advert,
   AdvertPhotos,
-  RentalDetails,
+  AdvertDetails,
   AvailabilitySlot,
-  RentalItem,
-  RentalsResponse,
-  RentalsQueryParams,
-  CreateBookingPayload,
-  BookingResponse,
+  AdvertItem,
+  AdvertsResponse,
+  AdvertsQueryParams,
+  CreateOrderPayload,
+  OrderResponse,
 } from './model/schema'

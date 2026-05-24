@@ -1,12 +1,12 @@
 import { apiClient } from '@/shared/api/api-client'
-import { UserRentalsResponse, userRentalsResponseSchema } from '../model/schema'
+import { UserAdvertsResponse, userAdvertsResponseSchema } from '../model/schema'
 
-export const getUserRentals = async (ownerId: string): Promise<UserRentalsResponse> => {
-  const { data } = await apiClient.get<UserRentalsResponse>(
+export const getUserAdverts = async (ownerId: string): Promise<UserAdvertsResponse> => {
+  const { data } = await apiClient.get<UserAdvertsResponse>(
     `/catalog/rentals/by-user/${ownerId}`
   )
 
-  const result = userRentalsResponseSchema.safeParse(data)
+  const result = userAdvertsResponseSchema.safeParse(data)
 
   if (!result.success) {
     console.error('Ошибка валидации объявлений пользователя:', result.error.issues)

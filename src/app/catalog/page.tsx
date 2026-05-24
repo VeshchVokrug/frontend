@@ -1,5 +1,5 @@
 import { HydrationBoundary, QueryClient, dehydrate } from '@tanstack/react-query'
-import { prefetchRentals } from '@/entities/advert/api/prefetch-rentals'
+import { prefetchAdverts } from '@/entities/advert/api/prefetch-adverts'
 import CategoryPage from '@/views/category'
 import { resolveDate } from '@/shared/lib/date'
 
@@ -29,7 +29,7 @@ export default async function page({ searchParams }: CatalogPageProps) {
   })
 
   try {
-    await prefetchRentals(serverQueryClient, {
+    await prefetchAdverts(serverQueryClient, {
       pageNumber: 1,
       pageSize: 12,
       categorySlug: filterParams.categorySlug,

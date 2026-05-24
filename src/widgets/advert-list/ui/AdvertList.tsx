@@ -9,6 +9,8 @@ interface AdvertListProps {
   currentPage?: number
   totalPages?: number
   onPageChange?: (page: number) => void
+  onDelete?: (id: string) => Promise<void>
+  showDeleteButton?: boolean
 }
 
 const GRID: Record<number, string> = {
@@ -22,6 +24,8 @@ export default function AdvertList({
   currentPage = 1,
   totalPages = 1,
   onPageChange,
+  onDelete,
+  showDeleteButton = false,
 }: AdvertListProps) {
   return (
     <section className="w-full">
@@ -29,7 +33,12 @@ export default function AdvertList({
         className={`mb-5 grid w-full justify-center gap-15.5 ${gridCols && GRID[gridCols]}`}
       >
         {advertList?.map((advert) => (
-          <AdvertCard {...advert} key={advert.id} />
+          <AdvertCard
+            {...advert}
+            key={advert.id}
+            onDelete={onDelete}
+            showDeleteButton={showDeleteButton}
+          />
         ))}
       </div>
       {advertList?.length > 6 && onPageChange && totalPages > 1 && (

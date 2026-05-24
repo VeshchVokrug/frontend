@@ -1,5 +1,5 @@
-import PreviousAdvertsPage from '@/views/previous-adverts'
+import { PreviousOrdersPage } from '@/views/orders'
 
 export default function page() {
-  return <PreviousAdvertsPage />
+  return <PreviousOrdersPage />
 }
